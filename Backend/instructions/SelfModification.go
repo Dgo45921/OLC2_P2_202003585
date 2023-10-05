@@ -2,6 +2,7 @@ package instructions
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 	"PY1/interfaces"
 )
 
@@ -16,6 +17,6 @@ func NewSelfModification(lin int, col int, id string, newval interfaces.Expressi
 	return SelfModification{lin, col, id, newval}
 }
 
-func (p SelfModification) Execute(ast *environment.AST, env interface{}) interface{} {
+func (p SelfModification) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
 	return p
 }

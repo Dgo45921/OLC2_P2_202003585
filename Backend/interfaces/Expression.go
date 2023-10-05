@@ -1,7 +1,10 @@
 package interfaces
 
-import "PY1/environment"
+import (
+	"PY1/environment"
+	"PY1/generator"
+)
 
 type Expression interface {
-	Execute(ast *environment.AST, env interface{}) environment.Symbol
+	Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value
 }

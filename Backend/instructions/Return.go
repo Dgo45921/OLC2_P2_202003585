@@ -2,6 +2,7 @@ package instructions
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 	"PY1/interfaces"
 )
 
@@ -16,9 +17,10 @@ func NewReturn(lin int, col int, exp interface{}) Return {
 	return breakInstr
 }
 
-func (p Return) Execute(ast *environment.AST, env interface{}) interface{} {
+
+func (p Return) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
 	if _, isBreak := p.Exp.(interfaces.Expression); isBreak {
-		return p.Exp.(interfaces.Expression).Execute(ast, env)
+		return p.Exp.(interfaces.Expression).Execute(ast, env, gen)
 
 	}
 	return environment.Symbol{

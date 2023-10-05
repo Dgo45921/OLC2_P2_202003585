@@ -2,7 +2,7 @@ package expressions
 
 import (
 	"PY1/environment"
-	"PY1/interfaces"
+	"PY1/generator"
 	"fmt"
 )
 
@@ -18,45 +18,9 @@ func NewStructAccess(lin int, col int, id string, accesses []string) StructAcces
 	return structaccess
 }
 
-func (p StructAccess) Execute(ast *environment.AST, env interface{}) environment.Symbol {
-	if env.(environment.Environment).VariableExists(p.ID) {
-		foundVar := env.(environment.Environment).FindVar(p.ID)
-		if foundVar.Type == environment.STRUCT_IMP {
-			foundSymbol := GetValueByArray(p.Accesses, foundVar)
-			if foundSymbol != nil {
-				if _, isBreak := foundSymbol.(interfaces.Expression); isBreak {
-					foundSymbol = foundSymbol.(interfaces.Expression).Execute(ast, env)
-					return environment.Symbol{Lin: p.Lin, Col: p.Col, Type: foundSymbol.(environment.Symbol).Type, Value: foundSymbol.(environment.Symbol).Value}
-				}
-				return foundSymbol.(environment.Symbol)
-			}
-			return environment.Symbol{Lin: p.Lin, Col: p.Col, Type: environment.NULL, Value: nil}
-
-		} else {
-			return environment.Symbol{Lin: p.Lin, Col: p.Col, Type: environment.NULL, Value: nil}
-
-		}
-	} else if env.(environment.Environment).ReferenceExists(p.ID) {
-		foundVar := env.(environment.Environment).FindReference(p.ID)
-		if foundVar.Type == environment.STRUCT_IMP {
-			foundSymbol := GetValueByArray(p.Accesses, foundVar)
-			if foundSymbol != nil {
-				if _, isBreak := foundSymbol.(interfaces.Expression); isBreak {
-					foundSymbol = foundSymbol.(interfaces.Expression).Execute(ast, env)
-					return environment.Symbol{Lin: p.Lin, Col: p.Col, Type: foundSymbol.(environment.Symbol).Type, Value: foundSymbol.(environment.Symbol).Value}
-				}
-				return foundSymbol.(environment.Symbol)
-			}
-			return environment.Symbol{Lin: p.Lin, Col: p.Col, Type: environment.NULL, Value: nil}
-
-		} else {
-			return environment.Symbol{Lin: p.Lin, Col: p.Col, Type: environment.NULL, Value: nil}
-
-		}
-
-	}
-
-	return environment.Symbol{Lin: p.Lin, Col: p.Col, Type: environment.NULL, Value: nil}
+func (p StructAccess) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	var result environment.Value
+	return result
 }
 
 func GetValueByArray(arr []string, symbol environment.Symbol) interface{} {

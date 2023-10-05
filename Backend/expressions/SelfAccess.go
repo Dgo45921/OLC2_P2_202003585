@@ -2,6 +2,7 @@ package expressions
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 )
 
 type SelfAccess struct {
@@ -15,7 +16,7 @@ func NewSelfAccess(lin int, col int, id string) SelfAccess {
 	return structaccess
 }
 
-func (p SelfAccess) Execute(ast *environment.AST, env interface{}) environment.Symbol {
-
-	return environment.Symbol{Lin: p.Lin, Col: p.Col, Type: environment.NULL, Value: p.ID}
+func (p SelfAccess) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	var result environment.Value
+	return result
 }

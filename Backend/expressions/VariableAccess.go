@@ -2,6 +2,7 @@ package expressions
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 )
 
 type VariableAccess struct {
@@ -13,18 +14,7 @@ func NewVariableAccess(id string) VariableAccess {
 	return exp
 }
 
-func (p VariableAccess) Execute(ast *environment.AST, env interface{}) environment.Symbol {
-	if env.(environment.Environment).VariableExists(p.ID) {
-		result := env.(environment.Environment).FindVar(p.ID)
-		return result
-	} else if env.(environment.Environment).ReferenceExists(p.ID) {
-		result := env.(environment.Environment).FindReference(p.ID)
-		return result
-	}
-	return environment.Symbol{
-		Lin:   0,
-		Col:   0,
-		Value: nil,
-	}
-
+func (p VariableAccess) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	var result environment.Value
+	return result
 }

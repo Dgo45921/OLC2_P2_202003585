@@ -2,8 +2,8 @@ package expressions
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 	"PY1/interfaces"
-	"math"
 	"strconv"
 	"strings"
 )
@@ -20,121 +20,9 @@ func NewCast(lin int, col int, valor string, tipo interfaces.Expression) Cast {
 	return cast
 }
 
-func (p Cast) Execute(ast *environment.AST, env interface{}) environment.Symbol {
-	val := p.Val.Execute(ast, env)
-
-	if p.CastingType == "Int" {
-		if val.Type == environment.STRING || val.Type == environment.CHAR {
-
-			input := val.Value.(string)
-			result, err := getIntegerValue(input)
-			if err != nil {
-				return environment.Symbol{
-					Lin:   p.Lin,
-					Col:   p.Col,
-					Type:  environment.INTEGER,
-					Value: nil,
-				}
-			} else {
-				return environment.Symbol{
-					Lin:   p.Lin,
-					Col:   p.Col,
-					Type:  environment.INTEGER,
-					Value: result,
-				}
-			}
-
-		} else if val.Type == environment.FLOAT {
-			return environment.Symbol{
-				Lin:   p.Lin,
-				Col:   p.Col,
-				Type:  environment.FLOAT,
-				Value: int(math.Floor(val.Value.(float64))),
-			}
-
-		} else {
-			return environment.Symbol{
-				Lin:   p.Lin,
-				Col:   p.Col,
-				Type:  environment.NULL,
-				Value: nil,
-			}
-
-		}
-
-	} else if p.CastingType == "Float" {
-		if val.Type == environment.STRING {
-			input := val.Value.(string)
-			parsedFloat, err := parseFloatFromString(input)
-			if err != nil {
-				return environment.Symbol{
-					Lin:   p.Lin,
-					Col:   p.Col,
-					Type:  environment.NULL,
-					Value: nil,
-				}
-			} else {
-				return environment.Symbol{
-					Lin:   p.Lin,
-					Col:   p.Col,
-					Type:  environment.FLOAT,
-					Value: parsedFloat,
-				}
-			}
-
-		} else if val.Type == environment.INTEGER {
-			return environment.Symbol{
-				Lin:   p.Lin,
-				Col:   p.Col,
-				Type:  environment.FLOAT,
-				Value: float64(val.Value.(int)),
-			}
-
-		} else {
-			return environment.Symbol{
-				Lin:   p.Lin,
-				Col:   p.Col,
-				Type:  environment.NULL,
-				Value: nil,
-			}
-		}
-
-	} else if p.CastingType == "String" {
-		if val.Type == environment.BOOLEAN {
-			return environment.Symbol{
-				Lin:   p.Lin,
-				Col:   p.Col,
-				Type:  environment.STRING,
-				Value: strconv.FormatBool(val.Value.(bool)),
-			}
-
-		} else if val.Type == environment.FLOAT {
-			return environment.Symbol{
-				Lin:   p.Lin,
-				Col:   p.Col,
-				Type:  environment.STRING,
-				Value: strconv.FormatFloat(val.Value.(float64), 'f', -1, 64),
-			}
-
-		} else if val.Type == environment.INTEGER {
-			return environment.Symbol{
-				Lin:   p.Lin,
-				Col:   p.Col,
-				Type:  environment.STRING,
-				Value: strconv.Itoa(val.Value.(int)),
-			}
-		} else {
-
-		}
-
-	}
-
-	return environment.Symbol{
-		Lin:   p.Lin,
-		Col:   p.Col,
-		Type:  environment.NULL,
-		Value: nil,
-	}
+func (p Cast) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	var result environment.Value
+	return result
 }
 
 func getIntegerValue(input string) (int, error) {

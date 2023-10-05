@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 	"PY1/interfaces"
 	"PY1/models"
 	"PY1/parser"
@@ -83,13 +84,27 @@ func Parse(w http.ResponseWriter, r *http.Request) {
 
 	// creating env
 	var newEnv = environment.NewEnvironment(nil, environment.GLOBAL)
+	//create generator
+	var Generator generator.Generator
+	Generator = generator.NewGenerator()
+
+	Generator.MainCode = true
 	//ejecución
 	for _, inst := range Code {
-		inst.(interfaces.Instruction).Execute(&Ast, newEnv)
+		inst.(interfaces.Instruction).Execute(&Ast, newEnv, &Generator)
 	}
-	fmt.Println(Ast.GetPrint())
+	Generator.GenerateFinalCode()
+	var ConsoleOut = ""
+	if len(Ast.Errors) == 0 {
+		for _, item := range Generator.GetFinalCode() {
+			ConsoleOut += item.(string)
+		}
+	} else {
+		ConsoleOut = "Hubieron errores, por favor revise el reporte de errores!\n"
+	}
+	fmt.Println(ConsoleOut)
 
-	consoleResponse.Console = Ast.GetPrint()
+	consoleResponse.Console = ConsoleOut
 	json.NewEncoder(w).Encode(consoleResponse)
 }
 

@@ -11,6 +11,8 @@ type Environment struct {
 	FunctionTable  map[string]FunctionSymbol
 	ReferenceTable map[string]Symbol
 	Scope          EnvType
+	Size           map[string]int
+	Id             string
 }
 
 func NewEnvironment(prev interface{}, scope EnvType) Environment {

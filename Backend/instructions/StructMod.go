@@ -2,6 +2,7 @@ package instructions
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 	"PY1/interfaces"
 	"errors"
 
@@ -21,24 +22,8 @@ func NewStructMod(lin int, col int, id string, accesses []string, exp interfaces
 	return structaccess
 }
 
-func (p StructMod) Execute(ast *environment.AST, env interface{}) interface{} {
-	foundVar := env.(environment.Environment).FindVar(p.ID)
-	newvalue := p.Exp.Execute(ast, env)
-	if foundVar.Type == environment.STRUCT_IMP {
-
-		err := UpdateValueByArray(p.Accesses, foundVar, newvalue, env)
-
-		if err != nil {
-			ast.SetError(p.Lin, p.Col, "no se pudo modificar el atributo")
-		}
-
-		return nil
-
-	} else {
-		return nil
-
-	}
-
+func (p StructMod) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
+	return nil
 }
 
 func UpdateValueByArray(arr []string, symbol environment.Symbol, val environment.Symbol, env interface{}) error {

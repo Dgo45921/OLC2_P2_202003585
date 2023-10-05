@@ -2,6 +2,7 @@ package instructions
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 )
 
 type Break struct {
@@ -14,7 +15,7 @@ func NewBreak(lin int, col int) Break {
 	return breakInstr
 }
 
-func (p Break) Execute(ast *environment.AST, env interface{}) interface{} {
+func (p Break) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
 	if !env.(environment.Environment).InsideLoop() {
 		ast.SetError(p.Lin, p.Col, "sentencia break debe de estar dentro de un ciclo")
 	}

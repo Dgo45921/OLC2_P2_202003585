@@ -2,28 +2,27 @@ package expressions
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 	"PY1/interfaces"
-	"fmt"
-	"strconv"
 )
 
 type ArithmeticOperation struct {
 	Lin      int
 	Col      int
-	LeftExp  interfaces.Expression
-	Operator string
-	RightExp interfaces.Expression
+	Op_izq   interfaces.Expression
+	Operador string
+	Op_der   interfaces.Expression
 }
 
 func NewArithmeticOperation(lin int, col int, Op1 interfaces.Expression, Operador string, Op2 interfaces.Expression) ArithmeticOperation {
-	exp := ArithmeticOperation{Lin: lin, Col: col, LeftExp: Op1, Operator: Operador, RightExp: Op2}
+	exp := ArithmeticOperation{Lin: lin, Col: col, Op_izq: Op1, Operador: Operador, Op_der: Op2}
 	return exp
 }
 
-func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}) environment.Symbol {
+func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	var dominante environment.TipoExpresion
 
-	tablaDominante := [5][5]environment.TipoExpresion{
+	tabla_dominante := [5][5]environment.TipoExpresion{
 		//		INTEGER			FLOAT				STRING				BOOLEAN				NULL
 		{environment.INTEGER, environment.FLOAT, environment.STRING, environment.BOOLEAN, environment.NULL},
 		//FLOAT
@@ -36,104 +35,258 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}) envi
 		{environment.NULL, environment.NULL, environment.NULL, environment.NULL, environment.NULL},
 	}
 
-	var op1, op2 environment.Symbol
-	op1 = o.LeftExp.Execute(ast, env)
-	op2 = o.RightExp.Execute(ast, env)
+	var op1, op2, result environment.Value
 
-	if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
-		ast.SetPrint("Error: Tipo de operacion no valida!\n")
-		return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: environment.NULL, Value: nil}
-	}
+	newTemp := gen.NewTemp()
 
-	switch o.Operator {
+	switch o.Operador {
 	case "+":
 		{
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
 			//validar tipo dominante
-			dominante = tablaDominante[op1.Type][op2.Type]
+			dominante = tabla_dominante[op1.Type][op2.Type]
 			//valida el tipo
-			if dominante == environment.INTEGER {
-				return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: op1.Value.(int) + op2.Value.(int)}
-			} else if dominante == environment.FLOAT {
-				val1, _ := strconv.ParseFloat(fmt.Sprintf("%v", op1.Value), 64)
-				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Value), 64)
-				return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: val1 + val2}
-			} else if dominante == environment.STRING {
-				r1 := fmt.Sprintf("%v", op1.Value)
-				r2 := fmt.Sprintf("%v", op2.Value)
-				return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: r1 + r2}
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+				gen.AddExpression(newTemp, op1.Value, op2.Value, "+")
+				result = environment.NewValue(newTemp, true, dominante)
+				result.IntValue = op1.IntValue + op2.IntValue
+				return result
 			} else {
-				ast.SetError(o.Lin, o.Col, "No es posible realizar operacion")
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible sumar")
 			}
 		}
 	case "-":
 		{
-			dominante = tablaDominante[op1.Type][op2.Type]
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
+			dominante = tabla_dominante[op1.Type][op2.Type]
 
-			if dominante == environment.INTEGER {
-				return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: op1.Value.(int) - op2.Value.(int)}
-			} else if dominante == environment.FLOAT {
-				val1, _ := strconv.ParseFloat(fmt.Sprintf("%v", op1.Value), 64)
-				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Value), 64)
-				return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: val1 - val2}
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+				gen.AddExpression(newTemp, op1.Value, op2.Value, "-")
+				result = environment.NewValue(newTemp, true, dominante)
+				result.IntValue = op1.IntValue - op2.IntValue
+				return result
 			} else {
-				ast.SetError(o.Lin, o.Col, "No es posible realizar operacion")
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible restar")
 			}
 		}
 	case "*":
 		{
-			dominante = tablaDominante[op1.Type][op2.Type]
-			if dominante == environment.INTEGER {
-				return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: op1.Value.(int) * op2.Value.(int)}
-			} else if dominante == environment.FLOAT {
-				val1, _ := strconv.ParseFloat(fmt.Sprintf("%v", op1.Value), 64)
-				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Value), 64)
-				return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: val1 * val2}
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
+			dominante = tabla_dominante[op1.Type][op2.Type]
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+				gen.AddExpression(newTemp, op1.Value, op2.Value, "*")
+				result = environment.NewValue(newTemp, true, dominante)
+				result.IntValue = op1.IntValue * op2.IntValue
+				return result
 			} else {
-				ast.SetError(o.Lin, o.Col, "No es posible realizar operacion")
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible multiplicar")
 			}
 		}
 	case "/":
 		{
-			dominante = tablaDominante[op1.Type][op2.Type]
-			if dominante == environment.INTEGER {
-				if op2.Value.(int) != 0 {
-					return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: op1.Value.(int) / op2.Value.(int)}
-				} else {
-					ast.SetError(o.Lin, o.Col, "No es posible dividir entre 0")
-				}
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
+			dominante = tabla_dominante[op1.Type][op2.Type]
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+				lvl1 := gen.NewLabel()
+				lvl2 := gen.NewLabel()
 
-			} else if dominante == environment.FLOAT {
-				val1, _ := strconv.ParseFloat(fmt.Sprintf("%v", op1.Value), 64)
-				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Value), 64)
-				if val2 != 0 {
-					return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: val1 / val2}
-				} else {
-					ast.SetError(o.Lin, o.Col, "No es posible dividir entre 0")
-				}
+				gen.AddIf(op2.Value, "0", "!=", lvl1)
+				gen.AddPrintf("c", "77")
+				gen.AddPrintf("c", "97")
+				gen.AddPrintf("c", "116")
+				gen.AddPrintf("c", "104")
+				gen.AddPrintf("c", "69")
+				gen.AddPrintf("c", "114")
+				gen.AddPrintf("c", "114")
+				gen.AddPrintf("c", "111")
+				gen.AddPrintf("c", "114")
+				gen.AddExpression(newTemp, "0", "", "")
+				gen.AddGoto(lvl2)
+				gen.AddLabel(lvl1)
+				gen.AddExpression(newTemp, op1.Value, op2.Value, "/")
+				gen.AddLabel(lvl2)
+				result = environment.NewValue(newTemp, true, dominante)
+				return result
 			} else {
-				ast.SetError(o.Lin, o.Col, "No es posible dividir")
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible dividir")
 			}
 
 		}
-
-	case "%":
+	case "<":
 		{
-			dominante = tablaDominante[op1.Type][op2.Type]
-			if dominante == environment.INTEGER {
-				if op2.Value.(int) != 0 {
-					return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: dominante, Value: op1.Value.(int) % op2.Value.(int)}
-				} else {
-					ast.SetError(o.Lin, o.Col, "No es posible hacer el modulo con los operandos dados")
-				}
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
+			dominante = tabla_dominante[op1.Type][op2.Type]
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+				trueLabel := gen.NewLabel()
+				falseLabel := gen.NewLabel()
+
+				gen.AddIf(op1.Value, op2.Value, "<", trueLabel)
+				gen.AddGoto(falseLabel)
+
+				result = environment.NewValue("", false, environment.BOOLEAN)
+				result.TrueLabel = append(result.TrueLabel, trueLabel)
+				result.FalseLabel = append(result.FalseLabel, falseLabel)
+				return result
 
 			} else {
-				ast.SetError(o.Lin, o.Col, "No es posible hacer el modulo con los operandos dados")
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar <")
+			}
+		}
+	case ">":
+		{
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
+			dominante = tabla_dominante[op1.Type][op2.Type]
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+
+				trueLabel := gen.NewLabel()
+				falseLabel := gen.NewLabel()
+
+				gen.AddIf(op1.Value, op2.Value, ">", trueLabel)
+				gen.AddGoto(falseLabel)
+
+				result = environment.NewValue("", false, environment.BOOLEAN)
+				result.TrueLabel = append(result.TrueLabel, trueLabel)
+				result.FalseLabel = append(result.FalseLabel, falseLabel)
+				return result
+			} else {
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar >")
+			}
+		}
+	case "<=":
+		{
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
+			dominante = tabla_dominante[op1.Type][op2.Type]
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+
+				trueLabel := gen.NewLabel()
+				falseLabel := gen.NewLabel()
+
+				gen.AddIf(op1.Value, op2.Value, "<=", trueLabel)
+				gen.AddGoto(falseLabel)
+
+				result = environment.NewValue("", false, environment.BOOLEAN)
+				result.TrueLabel = append(result.TrueLabel, trueLabel)
+				result.FalseLabel = append(result.FalseLabel, falseLabel)
+				return result
+			} else {
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar <=")
+			}
+		}
+	case ">=":
+		{
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
+			dominante = tabla_dominante[op1.Type][op2.Type]
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+
+				trueLabel := gen.NewLabel()
+				falseLabel := gen.NewLabel()
+
+				gen.AddIf(op1.Value, op2.Value, ">=", trueLabel)
+				gen.AddGoto(falseLabel)
+
+				result = environment.NewValue("", false, environment.BOOLEAN)
+				result.TrueLabel = append(result.TrueLabel, trueLabel)
+				result.FalseLabel = append(result.FalseLabel, falseLabel)
+				return result
+			} else {
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar >=")
+			}
+		}
+	case "==":
+		{
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
+			dominante = tabla_dominante[op1.Type][op2.Type]
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+
+				trueLabel := gen.NewLabel()
+				falseLabel := gen.NewLabel()
+
+				gen.AddIf(op1.Value, op2.Value, "==", trueLabel)
+				gen.AddGoto(falseLabel)
+
+				result = environment.NewValue("", false, environment.BOOLEAN)
+				result.TrueLabel = append(result.TrueLabel, trueLabel)
+				result.FalseLabel = append(result.FalseLabel, falseLabel)
+				return result
+			} else {
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar ==")
+			}
+		}
+	case "!=":
+		{
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			op2 = o.Op_der.Execute(ast, env, gen)
+			dominante = tabla_dominante[op1.Type][op2.Type]
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+
+				trueLabel := gen.NewLabel()
+				falseLabel := gen.NewLabel()
+
+				gen.AddIf(op1.Value, op2.Value, "!=", trueLabel)
+				gen.AddGoto(falseLabel)
+
+				result = environment.NewValue("", false, environment.BOOLEAN)
+				result.TrueLabel = append(result.TrueLabel, trueLabel)
+				result.FalseLabel = append(result.FalseLabel, falseLabel)
+				return result
+			} else {
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar !=")
+			}
+		}
+	case "&&":
+		{
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			//add op1 labels
+			for _, lvl := range op1.TrueLabel {
+				gen.AddLabel(lvl.(string))
 			}
 
+			op2 = o.Op_der.Execute(ast, env, gen)
+
+			result = environment.NewValue("", false, environment.BOOLEAN)
+			result.TrueLabel = append(op2.TrueLabel, result.TrueLabel...)
+			result.FalseLabel = append(op1.FalseLabel, result.FalseLabel...)
+			result.FalseLabel = append(op2.FalseLabel, result.FalseLabel...)
+			return result
 		}
+	case "||":
+		{
+			op1 = o.Op_izq.Execute(ast, env, gen)
 
+			for _, lvl := range op1.FalseLabel {
+				gen.AddLabel(lvl.(string))
+			}
+			op2 = o.Op_der.Execute(ast, env, gen)
+
+			result = environment.NewValue("", false, environment.BOOLEAN)
+
+			result.TrueLabel = append(op1.TrueLabel, result.TrueLabel...)
+			result.TrueLabel = append(op2.TrueLabel, result.TrueLabel...)
+			result.FalseLabel = append(op2.FalseLabel, result.FalseLabel...)
+			return result
+		}
+	case "!":
+		{
+			op1 = o.Op_izq.Execute(ast, env, gen)
+			if op1.Type == environment.BOOLEAN {
+				result = environment.NewValue("", false, environment.BOOLEAN)
+				result.TrueLabel = append(op1.FalseLabel, result.TrueLabel)
+				result.FalseLabel = append(op1.TrueLabel, result.FalseLabel)
+				return result
+			} else {
+				ast.SetError(o.Lin, o.Col, "ERROR: Tipo no compatible")
+			}
+		}
 	}
-
-	var result interface{}
-	return environment.Symbol{Lin: o.Lin, Col: o.Col, Type: environment.NULL, Value: result}
+	gen.AddBr()
+	return environment.Value{}
 }

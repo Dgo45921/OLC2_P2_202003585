@@ -2,9 +2,9 @@ package instructions
 
 import (
 	"PY1/environment"
+	"PY1/generator"
 	"PY1/interfaces"
 	"reflect"
-	"strings"
 )
 
 type MatrixDec struct {
@@ -20,150 +20,8 @@ func NewMatrixDec(lin int, col int, id string, tyype interface{}, def interfaces
 	return NewMatrixDeclaration
 }
 
-func (p MatrixDec) Execute(ast *environment.AST, env interface{}) interface{} {
-
-	if env.(environment.Environment).VariableExists(p.Id) {
-		ast.SetError(p.Lin, p.Col, "Variable ya declarada")
-		return nil
-	}
-
-	value := p.Def.Execute(ast, env)
-	value.Scope =  env.(environment.Environment).Scope
-	deepness := GetDepth(value.Value.([]interface{}))
-	if _, isString := p.Type.(string); isString {
-		if countCharOccurrences(p.Type.(string), ']') == deepness {
-			if deepness == 1 {
-				var matrixType = getMatrixType(value.Type)
-				value.Type = matrixType
-				env.(environment.Environment).SaveVariable(p.Id, value)
-				ast.SaveSymbol(p.Id,value)
-				return nil
-			}
-
-			arrayType := getCommonType(value.Value)
-			if arrayType != nil {
-				if arrayType == reflect.TypeOf(1) && strings.Contains(p.Type.(string), "Int") {
-					value.Type = environment.MATRIX_INT
-				} else if arrayType == reflect.TypeOf("x") && strings.Contains(p.Type.(string), "String") {
-					value.Type = environment.MATRIX_STRING
-				} else if arrayType == reflect.TypeOf(int32(0)) && strings.Contains(p.Type.(string), "Character") {
-					value.Type = environment.MATRIX_CHAR
-				} else if arrayType == reflect.TypeOf(5.121) && strings.Contains(p.Type.(string), "Float") {
-					value.Type = environment.MATRIX_FLOAT
-				} else if arrayType == reflect.TypeOf(false) && strings.Contains(p.Type.(string), "Bool") {
-					value.Type = environment.MATRIX_BOOLEAN
-				} else {
-					ast.SetError(p.Lin, p.Col, "matriz no coincide con tipo de dato definido")
-					return nil
-				}
-				env.(environment.Environment).SaveVariable(p.Id, value)
-				ast.SaveSymbol(p.Id,value)
-				return nil
-			} else {
-				ast.SetError(p.Lin, p.Col, "matriz con varios tipos de dato")
-				return nil
-			}
-
-		} else {
-			ast.SetError(p.Lin, p.Col, "Error: El tamaño con el que se inicializa la matriz no consiste con el tamaño definido")
-			return nil
-		}
-	} else {
-		arrayType := getCommonType(value.Value)
-		if arrayType != nil {
-			if arrayType == reflect.TypeOf(1) {
-				value.Type = environment.MATRIX_INT
-			} else if arrayType == reflect.TypeOf("x") {
-				value.Type = environment.MATRIX_STRING
-			} else if arrayType == reflect.TypeOf(int32(0)) {
-				value.Type = environment.MATRIX_CHAR
-			} else if arrayType == reflect.TypeOf(5.121) {
-				value.Type = environment.MATRIX_FLOAT
-			} else if arrayType == reflect.TypeOf(false) {
-				value.Type = environment.MATRIX_BOOLEAN
-			} else {
-				ast.SetError(p.Lin, p.Col, "matriz no coincide con tipo de dato definido")
-				return nil
-			}
-			env.(environment.Environment).SaveVariable(p.Id, value)
-			ast.SaveSymbol(p.Id,value)
-			return nil
-		} else {
-			ast.SetError(p.Lin, p.Col, "matriz con varios tipos de dato")
-			return nil
-		}
-
-	}
-
-}
-
-func (p MatrixDec) GetMatrixDec(ast *environment.AST, env interface{}) interface{} {
-
-	value := p.Def.Execute(ast, env)
-	value.Scope = env.(environment.Environment).Scope
-	deepness := GetDepth(value.Value.([]interface{}))
-	if _, isString := p.Type.(string); isString {
-		if countCharOccurrences(p.Type.(string), ']') == deepness {
-			if deepness == 1 {
-				var matrixType = getMatrixType(value.Type)
-				value.Type = matrixType
-				return value
-
-			}
-
-			arrayType := getCommonType(value.Value)
-			if arrayType != nil {
-				if arrayType == reflect.TypeOf(1) && strings.Contains(p.Type.(string), "Int") {
-					value.Type = environment.MATRIX_INT
-				} else if arrayType == reflect.TypeOf("x") && strings.Contains(p.Type.(string), "String") {
-					value.Type = environment.MATRIX_STRING
-				} else if arrayType == reflect.TypeOf(int32(0)) && strings.Contains(p.Type.(string), "Character") {
-					value.Type = environment.MATRIX_CHAR
-				} else if arrayType == reflect.TypeOf(5.121) && strings.Contains(p.Type.(string), "Float") {
-					value.Type = environment.MATRIX_FLOAT
-				} else if arrayType == reflect.TypeOf(false) && strings.Contains(p.Type.(string), "Bool") {
-					value.Type = environment.MATRIX_BOOLEAN
-				} else {
-					ast.SetError(p.Lin, p.Col, "matriz no coincide con tipo de dato definido")
-					return nil
-				}
-				return value
-
-			} else {
-				ast.SetError(p.Lin, p.Col, "matriz con varios tipos de dato")
-				return nil
-			}
-
-		} else {
-			ast.SetError(p.Lin, p.Col, "Error: El tamaño con el que se inicializa la matriz no consiste con el tamaño definido")
-			return nil
-		}
-	} else {
-		arrayType := getCommonType(value.Value)
-		if arrayType != nil {
-			if arrayType == reflect.TypeOf(1) {
-				value.Type = environment.MATRIX_INT
-			} else if arrayType == reflect.TypeOf("x") {
-				value.Type = environment.MATRIX_STRING
-			} else if arrayType == reflect.TypeOf(int32(0)) {
-				value.Type = environment.MATRIX_CHAR
-			} else if arrayType == reflect.TypeOf(5.121) {
-				value.Type = environment.MATRIX_FLOAT
-			} else if arrayType == reflect.TypeOf(false) {
-				value.Type = environment.MATRIX_BOOLEAN
-			} else {
-				ast.SetError(p.Lin, p.Col, "matriz no coincide con tipo de dato definido")
-				return nil
-			}
-			return value
-
-		} else {
-			ast.SetError(p.Lin, p.Col, "matriz con varios tipos de dato")
-			return nil
-		}
-
-	}
-
+func (p MatrixDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
+	return nil
 }
 
 func GetDepth(arr []interface{}) int {
