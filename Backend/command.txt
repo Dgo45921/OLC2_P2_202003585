@@ -1,0 +1,1 @@
+CompileDaemon -command="./PY1 -my-options"
