@@ -21,8 +21,12 @@ func (p Print) Execute(ast *environment.AST, env interface{}, gen *generator.Gen
 	for _, val := range p.Value {
 		var result environment.Value
 		result = val.(interfaces.Expression).Execute(ast, env, gen)
-		if result.Type == environment.INTEGER || result.Type == environment.FLOAT || result.Type == environment.VECTOR_INT {
+		if result.Type == environment.INTEGER {
 			gen.AddPrintf("d", "(int)"+fmt.Sprintf("%v", result.Value))
+			gen.AddPrintf("c", "10")
+			gen.AddBr()
+		} else if result.Type == environment.FLOAT {
+			gen.AddPrintf("lf", "(float)"+fmt.Sprintf("%v", result.Value))
 			gen.AddPrintf("c", "10")
 			gen.AddBr()
 		} else if result.Type == environment.BOOLEAN {
@@ -51,6 +55,13 @@ func (p Print) Execute(ast *environment.AST, env interface{}, gen *generator.Gen
 			gen.AddLabel(newLabel)
 			gen.AddPrintf("c", "10")
 			gen.AddBr()
+		} else if result.Type == environment.NULL {
+
+			gen.AddPrintf("c", "(char)78")
+			gen.AddPrintf("c", "(char)85")
+			gen.AddPrintf("c", "(char)76")
+			gen.AddPrintf("c", "(char)76")
+
 		} else if result.Type == environment.STRING {
 			//llamar a generar printstring
 			gen.GeneratePrintString()
@@ -62,7 +73,7 @@ func (p Print) Execute(ast *environment.AST, env interface{}, gen *generator.Gen
 			gen.AddExpression(newTemp1, newTemp1, "1", "+") //se deja espacio de retorno
 			gen.AddSetStack("(int)"+newTemp1, result.Value) //se coloca string en parametro que se manda
 			gen.AddExpression("P", "P", size, "+")          // cambio de entorno
-			gen.AddCall("dbrust_printString")               //Llamada
+			gen.AddCall("printString")                      //Llamada
 			gen.AddGetStack(newTemp2, "(int)P")             //obtencion retorno
 			gen.AddExpression("P", "P", size, "-")          //regreso del entorno
 			gen.AddPrintf("c", "10")                        //salto de linea

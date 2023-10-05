@@ -56,7 +56,7 @@ func (a *AST) SaveFunction(id string, symbol FunctionSymbol) {
 }
 
 func (a *AST) GetSymbolTable() string {
-	vizcode := "digraph G {\n  node [shape=plaintext];\n  labelloc=\"t\";\n  label=<\n    <table border=\"1\" cellspacing=\"0\" cellpadding=\"10\" >\n      <tr>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>ID</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Tipo símbolo</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Tipo dato</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Ámbito</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Línea</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Columna</b></td>\n      </tr>"
+	vizcode := "digraph G {\n  node [shape=plaintext];\n  labelloc=\"t\";\n  label=<\n    <table border=\"1\" cellspacing=\"0\" cellpadding=\"10\" >\n      <tr>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>ID</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Type símbolo</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Type dato</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Ámbito</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Línea</b></td>\n        <td bgcolor=\"lightgrey\" align=\"center\"><b>Columna</b></td>\n      </tr>"
 	for key, element := range a.Symbols {
 		if element.Const {
 			vizcode += "<tr>\n<td>" + key + "</td>\n   <td>Constante</td>\n    <td>" + element.GetType() + "</td>\n   <td>" + element.GetScopeType() + "</td>\n  <td>" + strconv.Itoa(element.Lin) + "</td>\n        <td>" + strconv.Itoa(element.Col) + "</td>\n      </tr>"

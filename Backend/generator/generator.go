@@ -229,7 +229,7 @@ func (g *Generator) GeneratePrintString() {
 		newLvl1 := g.NewLabel()
 		newLvl2 := g.NewLabel()
 		//se genera la funcion printstring
-		g.Natives = append(g.Natives, "void dbrust_printString() {\n")
+		g.Natives = append(g.Natives, "void printString() {\n")
 		g.Natives = append(g.Natives, "\t"+newTemp1+" = P + 1;\n")
 		g.Natives = append(g.Natives, "\t"+newTemp2+" = stack[(int)"+newTemp1+"];\n")
 		g.Natives = append(g.Natives, "\t"+newLvl2+":\n")

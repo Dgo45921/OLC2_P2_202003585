@@ -9,20 +9,20 @@ import (
 type ArithmeticOperation struct {
 	Lin      int
 	Col      int
-	Op_izq   interfaces.Expression
+	OpIzq    interfaces.Expression
 	Operador string
-	Op_der   interfaces.Expression
+	OpDer    interfaces.Expression
 }
 
 func NewArithmeticOperation(lin int, col int, Op1 interfaces.Expression, Operador string, Op2 interfaces.Expression) ArithmeticOperation {
-	exp := ArithmeticOperation{Lin: lin, Col: col, Op_izq: Op1, Operador: Operador, Op_der: Op2}
+	exp := ArithmeticOperation{Lin: lin, Col: col, OpIzq: Op1, Operador: Operador, OpDer: Op2}
 	return exp
 }
 
 func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	var dominante environment.TipoExpresion
 
-	tabla_dominante := [5][5]environment.TipoExpresion{
+	tablaDominante := [5][5]environment.TipoExpresion{
 		//		INTEGER			FLOAT				STRING				BOOLEAN				NULL
 		{environment.INTEGER, environment.FLOAT, environment.STRING, environment.BOOLEAN, environment.NULL},
 		//FLOAT
@@ -42,10 +42,10 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 	switch o.Operador {
 	case "+":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
 			//validar tipo dominante
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			dominante = tablaDominante[op1.Type][op2.Type]
 			//valida el tipo
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				gen.AddExpression(newTemp, op1.Value, op2.Value, "+")
@@ -58,9 +58,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "-":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
 
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				gen.AddExpression(newTemp, op1.Value, op2.Value, "-")
@@ -73,9 +73,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "*":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				gen.AddExpression(newTemp, op1.Value, op2.Value, "*")
 				result = environment.NewValue(newTemp, true, dominante)
@@ -87,9 +87,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "/":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				lvl1 := gen.NewLabel()
 				lvl2 := gen.NewLabel()
@@ -118,9 +118,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "<":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				trueLabel := gen.NewLabel()
 				falseLabel := gen.NewLabel()
@@ -139,9 +139,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case ">":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
 				trueLabel := gen.NewLabel()
@@ -160,9 +160,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "<=":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
 				trueLabel := gen.NewLabel()
@@ -181,9 +181,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case ">=":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
 				trueLabel := gen.NewLabel()
@@ -202,9 +202,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "==":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
 				trueLabel := gen.NewLabel()
@@ -223,9 +223,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "!=":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
-			op2 = o.Op_der.Execute(ast, env, gen)
-			dominante = tabla_dominante[op1.Type][op2.Type]
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
 				trueLabel := gen.NewLabel()
@@ -244,13 +244,13 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "&&":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
+			op1 = o.OpIzq.Execute(ast, env, gen)
 			//add op1 labels
 			for _, lvl := range op1.TrueLabel {
 				gen.AddLabel(lvl.(string))
 			}
 
-			op2 = o.Op_der.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
 
 			result = environment.NewValue("", false, environment.BOOLEAN)
 			result.TrueLabel = append(op2.TrueLabel, result.TrueLabel...)
@@ -260,12 +260,12 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "||":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
+			op1 = o.OpIzq.Execute(ast, env, gen)
 
 			for _, lvl := range op1.FalseLabel {
 				gen.AddLabel(lvl.(string))
 			}
-			op2 = o.Op_der.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
 
 			result = environment.NewValue("", false, environment.BOOLEAN)
 
@@ -276,14 +276,14 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "!":
 		{
-			op1 = o.Op_izq.Execute(ast, env, gen)
+			op1 = o.OpIzq.Execute(ast, env, gen)
 			if op1.Type == environment.BOOLEAN {
 				result = environment.NewValue("", false, environment.BOOLEAN)
 				result.TrueLabel = append(op1.FalseLabel, result.TrueLabel)
 				result.FalseLabel = append(op1.TrueLabel, result.FalseLabel)
 				return result
 			} else {
-				ast.SetError(o.Lin, o.Col, "ERROR: Tipo no compatible")
+				ast.SetError(o.Lin, o.Col, "ERROR: Type no compatible")
 			}
 		}
 	}

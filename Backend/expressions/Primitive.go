@@ -11,7 +11,7 @@ type Primitive struct {
 	Lin   int
 	Col   int
 	Valor interface{}
-	Tipo  environment.TipoExpresion
+	Type  environment.TipoExpresion
 }
 
 func NewPrimitive(lin int, col int, valor interface{}, tipo environment.TipoExpresion) Primitive {
@@ -21,12 +21,14 @@ func NewPrimitive(lin int, col int, valor interface{}, tipo environment.TipoExpr
 
 func (p Primitive) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	var result environment.Value
-	if p.Tipo == environment.INTEGER {
-		result = environment.NewValue(fmt.Sprintf("%v", p.Valor), false, p.Tipo)
+	if p.Type == environment.INTEGER {
+		result = environment.NewValue(fmt.Sprintf("%v", p.Valor), false, p.Type)
 		result.IntValue = p.Valor.(int)
-	} else if p.Tipo == environment.FLOAT {
-		result = environment.NewValue(fmt.Sprintf("%v", p.Valor), false, p.Tipo)
-	} else if p.Tipo == environment.STRING {
+	} else if p.Type == environment.FLOAT {
+		result = environment.NewValue(fmt.Sprintf("%v", p.Valor), false, p.Type)
+	} else if p.Type == environment.NULL {
+		result = environment.NewValue("NULLPTR", false, p.Type)
+	} else if p.Type == environment.STRING {
 		//nuevo temporal
 		newTemp := gen.NewTemp()
 		//iguala a heap pointer
@@ -44,9 +46,9 @@ func (p Primitive) Execute(ast *environment.AST, env interface{}, gen *generator
 		gen.AddSetHeap("(int)H", "-1")
 		gen.AddExpression("H", "H", "1", "+")
 		gen.AddBr()
-		result = environment.NewValue(newTemp, true, p.Tipo)
-		//result = environment.Value{Value: newTemp, IsTemp: true, Type: p.Tipo}
-	} else if p.Tipo == environment.BOOLEAN {
+		result = environment.NewValue(newTemp, true, p.Type)
+		//result = environment.Value{Value: newTemp, IsTemp: true, Type: p.Type}
+	} else if p.Type == environment.BOOLEAN {
 		gen.AddComment("Primitivo bool")
 		trueLabel := gen.NewLabel()
 		falseLabel := gen.NewLabel()
