@@ -10,12 +10,12 @@ type ArithmeticOperation struct {
 	Lin      int
 	Col      int
 	OpIzq    interfaces.Expression
-	Operador string
+	Operator string
 	OpDer    interfaces.Expression
 }
 
 func NewArithmeticOperation(lin int, col int, Op1 interfaces.Expression, Operador string, Op2 interfaces.Expression) ArithmeticOperation {
-	exp := ArithmeticOperation{Lin: lin, Col: col, OpIzq: Op1, Operador: Operador, OpDer: Op2}
+	exp := ArithmeticOperation{Lin: lin, Col: col, OpIzq: Op1, Operator: Operador, OpDer: Op2}
 	return exp
 }
 
@@ -38,8 +38,7 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 	var op1, op2, result environment.Value
 
 	newTemp := gen.NewTemp()
-
-	switch o.Operador {
+	switch o.Operator {
 	case "+":
 		{
 			op1 = o.OpIzq.Execute(ast, env, gen)
@@ -116,176 +115,8 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 			}
 
 		}
-	case "<":
-		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-			op2 = o.OpDer.Execute(ast, env, gen)
-			dominante = tablaDominante[op1.Type][op2.Type]
-			if dominante == environment.INTEGER || dominante == environment.FLOAT {
-				trueLabel := gen.NewLabel()
-				falseLabel := gen.NewLabel()
 
-				gen.AddIf(op1.Value, op2.Value, "<", trueLabel)
-				gen.AddGoto(falseLabel)
 
-				result = environment.NewValue("", false, environment.BOOLEAN)
-				result.TrueLabel = append(result.TrueLabel, trueLabel)
-				result.FalseLabel = append(result.FalseLabel, falseLabel)
-				return result
-
-			} else {
-				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar <")
-			}
-		}
-	case ">":
-		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-			op2 = o.OpDer.Execute(ast, env, gen)
-			dominante = tablaDominante[op1.Type][op2.Type]
-			if dominante == environment.INTEGER || dominante == environment.FLOAT {
-
-				trueLabel := gen.NewLabel()
-				falseLabel := gen.NewLabel()
-
-				gen.AddIf(op1.Value, op2.Value, ">", trueLabel)
-				gen.AddGoto(falseLabel)
-
-				result = environment.NewValue("", false, environment.BOOLEAN)
-				result.TrueLabel = append(result.TrueLabel, trueLabel)
-				result.FalseLabel = append(result.FalseLabel, falseLabel)
-				return result
-			} else {
-				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar >")
-			}
-		}
-	case "<=":
-		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-			op2 = o.OpDer.Execute(ast, env, gen)
-			dominante = tablaDominante[op1.Type][op2.Type]
-			if dominante == environment.INTEGER || dominante == environment.FLOAT {
-
-				trueLabel := gen.NewLabel()
-				falseLabel := gen.NewLabel()
-
-				gen.AddIf(op1.Value, op2.Value, "<=", trueLabel)
-				gen.AddGoto(falseLabel)
-
-				result = environment.NewValue("", false, environment.BOOLEAN)
-				result.TrueLabel = append(result.TrueLabel, trueLabel)
-				result.FalseLabel = append(result.FalseLabel, falseLabel)
-				return result
-			} else {
-				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar <=")
-			}
-		}
-	case ">=":
-		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-			op2 = o.OpDer.Execute(ast, env, gen)
-			dominante = tablaDominante[op1.Type][op2.Type]
-			if dominante == environment.INTEGER || dominante == environment.FLOAT {
-
-				trueLabel := gen.NewLabel()
-				falseLabel := gen.NewLabel()
-
-				gen.AddIf(op1.Value, op2.Value, ">=", trueLabel)
-				gen.AddGoto(falseLabel)
-
-				result = environment.NewValue("", false, environment.BOOLEAN)
-				result.TrueLabel = append(result.TrueLabel, trueLabel)
-				result.FalseLabel = append(result.FalseLabel, falseLabel)
-				return result
-			} else {
-				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar >=")
-			}
-		}
-	case "==":
-		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-			op2 = o.OpDer.Execute(ast, env, gen)
-			dominante = tablaDominante[op1.Type][op2.Type]
-			if dominante == environment.INTEGER || dominante == environment.FLOAT {
-
-				trueLabel := gen.NewLabel()
-				falseLabel := gen.NewLabel()
-
-				gen.AddIf(op1.Value, op2.Value, "==", trueLabel)
-				gen.AddGoto(falseLabel)
-
-				result = environment.NewValue("", false, environment.BOOLEAN)
-				result.TrueLabel = append(result.TrueLabel, trueLabel)
-				result.FalseLabel = append(result.FalseLabel, falseLabel)
-				return result
-			} else {
-				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar ==")
-			}
-		}
-	case "!=":
-		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-			op2 = o.OpDer.Execute(ast, env, gen)
-			dominante = tablaDominante[op1.Type][op2.Type]
-			if dominante == environment.INTEGER || dominante == environment.FLOAT {
-
-				trueLabel := gen.NewLabel()
-				falseLabel := gen.NewLabel()
-
-				gen.AddIf(op1.Value, op2.Value, "!=", trueLabel)
-				gen.AddGoto(falseLabel)
-
-				result = environment.NewValue("", false, environment.BOOLEAN)
-				result.TrueLabel = append(result.TrueLabel, trueLabel)
-				result.FalseLabel = append(result.FalseLabel, falseLabel)
-				return result
-			} else {
-				ast.SetError(o.Lin, o.Col, "ERROR: No es posible comparar !=")
-			}
-		}
-	case "&&":
-		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-			//add op1 labels
-			for _, lvl := range op1.TrueLabel {
-				gen.AddLabel(lvl.(string))
-			}
-
-			op2 = o.OpDer.Execute(ast, env, gen)
-
-			result = environment.NewValue("", false, environment.BOOLEAN)
-			result.TrueLabel = append(op2.TrueLabel, result.TrueLabel...)
-			result.FalseLabel = append(op1.FalseLabel, result.FalseLabel...)
-			result.FalseLabel = append(op2.FalseLabel, result.FalseLabel...)
-			return result
-		}
-	case "||":
-		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-
-			for _, lvl := range op1.FalseLabel {
-				gen.AddLabel(lvl.(string))
-			}
-			op2 = o.OpDer.Execute(ast, env, gen)
-
-			result = environment.NewValue("", false, environment.BOOLEAN)
-
-			result.TrueLabel = append(op1.TrueLabel, result.TrueLabel...)
-			result.TrueLabel = append(op2.TrueLabel, result.TrueLabel...)
-			result.FalseLabel = append(op2.FalseLabel, result.FalseLabel...)
-			return result
-		}
-	case "!":
-		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-			if op1.Type == environment.BOOLEAN {
-				result = environment.NewValue("", false, environment.BOOLEAN)
-				result.TrueLabel = append(op1.FalseLabel, result.TrueLabel)
-				result.FalseLabel = append(op1.TrueLabel, result.FalseLabel)
-				return result
-			} else {
-				ast.SetError(o.Lin, o.Col, "ERROR: Type no compatible")
-			}
-		}
 	}
 	gen.AddBr()
 	return environment.Value{}

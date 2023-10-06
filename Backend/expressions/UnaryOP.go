@@ -4,6 +4,7 @@ import (
 	"PY1/environment"
 	"PY1/generator"
 	"PY1/interfaces"
+	"fmt"
 )
 
 type UnaryOp struct {
@@ -19,7 +20,40 @@ func NewUnaryOperation(lin int, col int, Op1 interfaces.Expression, Operador str
 }
 
 func (p UnaryOp) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
-	var result environment.Value
+	var op1, result environment.Value
+	op1 = p.Exp.Execute(ast, env, gen)
+
+	switch p.Operator {
+	case "!":
+		{
+			op1 = p.Exp.Execute(ast, env, gen)
+			if op1.Type == environment.BOOLEAN {
+				result = environment.NewValue("", false, environment.BOOLEAN)
+				result.TrueLabel = append(op1.FalseLabel, result.TrueLabel)
+				result.FalseLabel = append(op1.TrueLabel, result.FalseLabel)
+				return result
+			} else {
+				ast.SetError(p.Lin, p.Col, "ERROR: Type no compatible")
+			}
+		}
+	case "-":
+		{
+			op1 = p.Exp.Execute(ast, env, gen)
+			newTemp := gen.NewTemp()
+			if op1.Type == environment.INTEGER {
+				gen.AddExpression(newTemp, "0", op1.Value, "-")
+				result = environment.NewValue(newTemp, true, environment.INTEGER)
+				return result
+			} else if op1.Type == environment.FLOAT {
+				gen.AddExpression(newTemp, "0", op1.Value, "-")
+				result = environment.NewValue(newTemp, true, environment.FLOAT)
+				return result
+			} else {
+				fmt.Println("ERROR: tipo no compatible -")
+			}
+		}
+
+	}
 	return result
 }
 func returnString(val int) string {
