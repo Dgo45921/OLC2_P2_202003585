@@ -21,7 +21,6 @@ func NewUnaryOperation(lin int, col int, Op1 interfaces.Expression, Operador str
 
 func (p UnaryOp) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	var op1, result environment.Value
-	op1 = p.Exp.Execute(ast, env, gen)
 
 	switch p.Operator {
 	case "!":
@@ -29,8 +28,8 @@ func (p UnaryOp) Execute(ast *environment.AST, env interface{}, gen *generator.G
 			op1 = p.Exp.Execute(ast, env, gen)
 			if op1.Type == environment.BOOLEAN {
 				result = environment.NewValue("", false, environment.BOOLEAN)
-				result.TrueLabel = append(op1.FalseLabel, result.TrueLabel)
-				result.FalseLabel = append(op1.TrueLabel, result.FalseLabel)
+				result.TrueLabel = append(result.TrueLabel, op1.FalseLabel...)
+				result.FalseLabel = append(result.FalseLabel, op1.TrueLabel...)
 				return result
 			} else {
 				ast.SetError(p.Lin, p.Col, "ERROR: Type no compatible")

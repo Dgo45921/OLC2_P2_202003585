@@ -183,7 +183,7 @@ func (g *Generator) GenerateFinalCode() {
 	g.FinalCode = append(g.FinalCode, "double stack[30101999];\n")
 	g.FinalCode = append(g.FinalCode, "double P;\n")
 	g.FinalCode = append(g.FinalCode, "double H;\n")
-	g.FinalCode = append(g.FinalCode, "double ")
+	g.FinalCode = append(g.FinalCode, "double comodin ")
 	//****************** add temporal declaration
 	tempArr := g.GetTemps()
 	if len(tempArr) > 0 {
@@ -194,8 +194,8 @@ func (g *Generator) GenerateFinalCode() {
 			tmpDec += fmt.Sprintf("%v", s)
 		}
 		tmpDec += ";\n\n"
-		g.FinalCode = append(g.FinalCode, tmpDec)
 	}
+	g.FinalCode = append(g.FinalCode, ";\n\n")
 	//****************** add natives functions
 	if len(g.Natives) > 0 {
 		g.FinalCode = append(g.FinalCode, "/*------NATIVES------*/\n")
