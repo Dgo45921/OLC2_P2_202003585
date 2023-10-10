@@ -8,6 +8,7 @@ type Symbol struct {
 	Const      bool
 	StructType string
 	Scope      EnvType
+	Position   int
 }
 
 func (s Symbol) SetnewValue(value interface{}) {

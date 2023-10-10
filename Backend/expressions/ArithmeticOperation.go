@@ -43,6 +43,11 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.OpIzq.Execute(ast, env, gen)
 			op2 = o.OpDer.Execute(ast, env, gen)
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
+
 			//validar tipo dominante
 			dominante = tablaDominante[op1.Type][op2.Type]
 			//valida el tipo
@@ -59,6 +64,10 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.OpIzq.Execute(ast, env, gen)
 			op2 = o.OpDer.Execute(ast, env, gen)
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
 			dominante = tablaDominante[op1.Type][op2.Type]
 
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
@@ -74,6 +83,10 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.OpIzq.Execute(ast, env, gen)
 			op2 = o.OpDer.Execute(ast, env, gen)
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
 			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				gen.AddExpression(newTemp, op1.Value, op2.Value, "*")
@@ -89,6 +102,10 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 			op1 = o.OpIzq.Execute(ast, env, gen)
 			op2 = o.OpDer.Execute(ast, env, gen)
 			dominante = tablaDominante[op1.Type][op2.Type]
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				lvl1 := gen.NewLabel()
 				lvl2 := gen.NewLabel()
@@ -116,6 +133,41 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 
 		}
 
+	case "%":
+		{
+			op1 = o.OpIzq.Execute(ast, env, gen)
+			op2 = o.OpDer.Execute(ast, env, gen)
+			dominante = tablaDominante[op1.Type][op2.Type]
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
+			if dominante == environment.INTEGER || dominante == environment.FLOAT {
+				lvl1 := gen.NewLabel()
+				lvl2 := gen.NewLabel()
+
+				gen.AddIf(op2.Value, "0", "!=", lvl1)
+				gen.AddPrintf("c", "77")
+				gen.AddPrintf("c", "97")
+				gen.AddPrintf("c", "116")
+				gen.AddPrintf("c", "104")
+				gen.AddPrintf("c", "69")
+				gen.AddPrintf("c", "114")
+				gen.AddPrintf("c", "114")
+				gen.AddPrintf("c", "111")
+				gen.AddPrintf("c", "114")
+				gen.AddExpression(newTemp, "0", "", "")
+				gen.AddGoto(lvl2)
+				gen.AddLabel(lvl1)
+				gen.AddExpression(newTemp, op1.Value, op2.Value, "%")
+				gen.AddLabel(lvl2)
+				result = environment.NewValue(newTemp, true, dominante)
+				return result
+			} else {
+				ast.SetError(o.Lin, o.Col, "ERROR: No es posible hacer modulo")
+			}
+
+		}
 
 	}
 	gen.AddBr()

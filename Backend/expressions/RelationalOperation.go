@@ -41,6 +41,10 @@ func (o RelationalOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.LeftExp.Execute(ast, env, gen)
 			op2 = o.RightExp.Execute(ast, env, gen)
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
 			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				trueLabel := gen.NewLabel()
@@ -62,6 +66,10 @@ func (o RelationalOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.LeftExp.Execute(ast, env, gen)
 			op2 = o.RightExp.Execute(ast, env, gen)
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
 			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
@@ -83,6 +91,10 @@ func (o RelationalOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.LeftExp.Execute(ast, env, gen)
 			op2 = o.RightExp.Execute(ast, env, gen)
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
 			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
@@ -104,6 +116,10 @@ func (o RelationalOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.LeftExp.Execute(ast, env, gen)
 			op2 = o.RightExp.Execute(ast, env, gen)
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
 			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
@@ -125,6 +141,10 @@ func (o RelationalOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.LeftExp.Execute(ast, env, gen)
 			op2 = o.RightExp.Execute(ast, env, gen)
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
 			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
@@ -146,6 +166,10 @@ func (o RelationalOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.LeftExp.Execute(ast, env, gen)
 			op2 = o.RightExp.Execute(ast, env, gen)
+			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
+				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
+				return environment.Value{}
+			}
 			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 
