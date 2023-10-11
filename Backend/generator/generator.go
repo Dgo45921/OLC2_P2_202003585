@@ -157,6 +157,13 @@ func (g *Generator) AddCall(target string) {
 	}
 }
 
+func (g *Generator) AddCustom(target string) {
+
+	g.Code = append(g.Code, target)
+
+
+}
+
 func (g *Generator) AddBr() {
 	if g.MainCode {
 		g.Code = append(g.Code, "\n")

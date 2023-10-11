@@ -101,11 +101,12 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.OpIzq.Execute(ast, env, gen)
 			op2 = o.OpDer.Execute(ast, env, gen)
-			dominante = tablaDominante[op1.Type][op2.Type]
 			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
 				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
 				return environment.Value{}
 			}
+			dominante = tablaDominante[op1.Type][op2.Type]
+
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				lvl1 := gen.NewLabel()
 				lvl2 := gen.NewLabel()
@@ -137,11 +138,12 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		{
 			op1 = o.OpIzq.Execute(ast, env, gen)
 			op2 = o.OpDer.Execute(ast, env, gen)
-			dominante = tablaDominante[op1.Type][op2.Type]
 			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
 				ast.SetError(o.Lin, o.Col, "Error, tipo de operacion no valida!")
 				return environment.Value{}
 			}
+			dominante = tablaDominante[op1.Type][op2.Type]
+
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
 				lvl1 := gen.NewLabel()
 				lvl2 := gen.NewLabel()
@@ -159,7 +161,8 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 				gen.AddExpression(newTemp, "0", "", "")
 				gen.AddGoto(lvl2)
 				gen.AddLabel(lvl1)
-				gen.AddExpression(newTemp, op1.Value, op2.Value, "%")
+				//gen.AddExpression(newTemp, op1.Value, op2.Value, "%")
+				gen.AddCustom("fmod(" + op1.Value + "," + op2.Value + ");")
 				gen.AddLabel(lvl2)
 				result = environment.NewValue(newTemp, true, dominante)
 				return result
