@@ -18,6 +18,6 @@ func NewConstDec(lin int, col int, id string, tyype interface{}, val interface{}
 	return NewConstDeclaration
 }
 
-func (p ConstDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p ConstDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }

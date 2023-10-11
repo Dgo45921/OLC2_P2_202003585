@@ -28,7 +28,7 @@ func (p Primitive) Execute(ast *environment.AST, env interface{}, gen *generator
 		result = environment.NewValue(fmt.Sprintf("%v", p.Valor), false, p.Type)
 	} else if p.Type == environment.NULL {
 		result = environment.NewValue("NULLPTR", false, p.Type)
-	} else if p.Type == environment.STRING {
+	} else if p.Type == environment.STRING || p.Type == environment.CHAR {
 		//nuevo temporal
 		newTemp := gen.NewTemp()
 		//iguala a heap pointer

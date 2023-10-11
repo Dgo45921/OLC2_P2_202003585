@@ -6,5 +6,5 @@ import (
 )
 
 type Instruction interface {
-	Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{}
+	Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value
 }

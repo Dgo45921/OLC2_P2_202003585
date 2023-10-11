@@ -19,6 +19,6 @@ func NewVecDec(lin int, col int, id string, tyype string, deftype interface{}, e
 	return NewVecDeclaration
 }
 
-func (p VecDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p VecDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }

@@ -17,9 +17,9 @@ type Print struct {
 func NewPrint(lin int, col int, val []interface{}) Print {
 	return Print{lin, col, val}
 }
-func (p Print) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
+func (p Print) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	var result environment.Value
 	for _, val := range p.Value {
-		var result environment.Value
 		result = val.(interfaces.Expression).Execute(ast, env, gen)
 		if result.Type == environment.INTEGER {
 			gen.AddPrintf("d", "(int)"+fmt.Sprintf("%v", result.Value))
@@ -62,7 +62,7 @@ func (p Print) Execute(ast *environment.AST, env interface{}, gen *generator.Gen
 			gen.AddPrintf("c", "(char)76")
 			gen.AddPrintf("c", "(char)76")
 
-		} else if result.Type == environment.STRING {
+		} else if result.Type == environment.STRING || result.Type == environment.CHAR {
 			//llamar a generar printstring
 			gen.GeneratePrintString()
 			//agregar codigo en el main
@@ -82,5 +82,5 @@ func (p Print) Execute(ast *environment.AST, env interface{}, gen *generator.Gen
 
 	}
 
-	return nil
+	return result
 }

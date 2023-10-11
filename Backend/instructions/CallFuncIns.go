@@ -17,6 +17,6 @@ func NewCallFuncInst(lin int, col int, val string, param []environment.FuncArg) 
 	return exp
 }
 
-func (p CallFuncInst) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p CallFuncInst) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }

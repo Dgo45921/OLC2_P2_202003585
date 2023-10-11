@@ -19,8 +19,8 @@ func NewFuncDec(lin int, col int, id string, args []environment.FuncParam, ret i
 	return FuncDec{lin, col, id, args, ret, insb, mut}
 }
 
-func (p FuncDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p FuncDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }
 func getReturnType(str string) environment.TipoExpresion {
 	if str == "String" {

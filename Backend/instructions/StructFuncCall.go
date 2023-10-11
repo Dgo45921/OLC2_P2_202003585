@@ -16,8 +16,8 @@ func NewStructFuncCall(lin int, col int, id string, funcid string) StructFuncCal
 	return StructFuncCall{lin, col, id, funcid}
 }
 
-func (p StructFuncCall) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p StructFuncCall) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }
 func GetValueByArray(arr []string, symbol environment.Symbol) interface{} {
 	var currentSymbol = symbol

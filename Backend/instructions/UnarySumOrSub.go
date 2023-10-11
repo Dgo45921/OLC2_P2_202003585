@@ -18,7 +18,7 @@ func NewUnarySum(lin int, col int, id string, op string, val interfaces.Expressi
 	return UnarySum{lin, col, id, op, val}
 }
 
-func (p UnarySum) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
+func (p UnarySum) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 
-	return nil
+	return environment.Value{}
 }

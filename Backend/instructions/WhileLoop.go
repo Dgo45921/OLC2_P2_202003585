@@ -17,6 +17,6 @@ func NewWhile(lin int, col int, condition interfaces.Expression, insBlock []inte
 	return While{lin, col, condition, insBlock}
 }
 
-func (p While) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p While) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }

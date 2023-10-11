@@ -18,15 +18,10 @@ func NewReturn(lin int, col int, exp interface{}) Return {
 }
 
 
-func (p Return) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
+func (p Return) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	if _, isBreak := p.Exp.(interfaces.Expression); isBreak {
 		return p.Exp.(interfaces.Expression).Execute(ast, env, gen)
 
 	}
-	return environment.Symbol{
-		Lin:   p.Lin,
-		Col:   p.Col,
-		Value: nil,
-		Type:  environment.NULL,
-	}
+	return environment.Value{}
 }

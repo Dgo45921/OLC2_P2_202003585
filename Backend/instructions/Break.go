@@ -15,9 +15,9 @@ func NewBreak(lin int, col int) Break {
 	return breakInstr
 }
 
-func (p Break) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
+func (p Break) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value{
 	if !env.(environment.Environment).InsideLoop() {
 		ast.SetError(p.Lin, p.Col, "sentencia break debe de estar dentro de un ciclo")
 	}
-	return p
+	return environment.Value{}
 }

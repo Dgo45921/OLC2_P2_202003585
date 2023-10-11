@@ -17,6 +17,6 @@ func NewCase(lin int, col int, condition interfaces.Expression, insBlock []inter
 	return Case{lin, col, condition, insBlock}
 }
 
-func (p Case) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p Case) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }

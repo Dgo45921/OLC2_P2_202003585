@@ -18,8 +18,8 @@ func NewAsignation(lin int, col int, id string, val interfaces.Expression) Asign
 	return asig
 }
 
-func (p Asignation) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p Asignation) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }
 
 func DeepCopyArray(source interface{}) interface{} {

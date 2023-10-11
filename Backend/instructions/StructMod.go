@@ -22,8 +22,8 @@ func NewStructMod(lin int, col int, id string, accesses []string, exp interfaces
 	return structaccess
 }
 
-func (p StructMod) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p StructMod) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }
 
 func UpdateValueByArray(arr []string, symbol environment.Symbol, val environment.Symbol, env interface{}) error {

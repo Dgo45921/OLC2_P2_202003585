@@ -18,6 +18,6 @@ func NewRemoveAtVector(lin int, col int, id string, index interfaces.Expression)
 	return asig
 }
 
-func (p RemoveAtVector) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p RemoveAtVector) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }

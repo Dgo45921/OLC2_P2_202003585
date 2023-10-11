@@ -15,9 +15,9 @@ func NewContinue(lin int, col int) Continue {
 	return breakInstr
 }
 
-func (p Continue) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
+func (p Continue) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value{
 	if !env.(environment.Environment).InsideLoop() {
 		ast.SetError(p.Lin, p.Col, "sentencia continue debe de estar dentro de un ciclo")
 	}
-	return p
+	return environment.Value{}
 }

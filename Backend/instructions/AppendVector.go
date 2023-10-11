@@ -18,6 +18,6 @@ func NewAppendVector(lin int, col int, id string, val interfaces.Expression) App
 	return asig
 }
 
-func (p AppendVector) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p AppendVector) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }

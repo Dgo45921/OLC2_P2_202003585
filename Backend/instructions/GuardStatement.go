@@ -17,6 +17,6 @@ func NewGuard(lin int, col int, condition interfaces.Expression, falseb []interf
 	return Guard{lin, col, condition, falseb}
 }
 
-func (p Guard) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p Guard) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }

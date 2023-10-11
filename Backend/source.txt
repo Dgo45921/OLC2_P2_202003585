@@ -1,5 +1,9 @@
 
+var prueba:Int = 100
 
-var prueba:Bool = "Hola" = "Hola"
 
-print(prueba)
+if prueba < 50 {
+    print("a")
+
+}
+

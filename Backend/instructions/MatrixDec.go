@@ -20,8 +20,8 @@ func NewMatrixDec(lin int, col int, id string, tyype interface{}, def interfaces
 	return NewMatrixDeclaration
 }
 
-func (p MatrixDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p MatrixDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }
 
 func GetDepth(arr []interface{}) int {

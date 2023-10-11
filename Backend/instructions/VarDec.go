@@ -20,10 +20,10 @@ func NewVarDec(lin int, col int, id string, tyype interface{}, val interface{}) 
 	return NewVarDeclaration
 }
 
-func (p VarDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
+func (p VarDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	if env.(environment.Environment).VariableExists(p.Id) {
 		ast.SetError(p.Lin, p.Col, "Error, variable ya declarada!")
-		return nil
+		return environment.Value{}
 	}
 	var result environment.Value
 	var newVar environment.Symbol

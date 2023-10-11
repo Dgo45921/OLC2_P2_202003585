@@ -91,7 +91,10 @@ func Parse(w http.ResponseWriter, r *http.Request) {
 	Generator.MainCode = true
 	//ejecución
 	for _, inst := range Code {
-		inst.(interfaces.Instruction).Execute(&Ast, newEnv, &Generator)
+		val := inst.(interfaces.Instruction).Execute(&Ast, newEnv, &Generator)
+		for _, lvl := range val.OutLabel {
+			Generator.AddLabel(lvl.(string))
+		}
 	}
 	Generator.GenerateFinalCode()
 	var ConsoleOut = ""

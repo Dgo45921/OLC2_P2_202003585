@@ -17,6 +17,6 @@ func NewSelfModification(lin int, col int, id string, newval interfaces.Expressi
 	return SelfModification{lin, col, id, newval}
 }
 
-func (p SelfModification) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return p
+func (p SelfModification) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value{
+	return environment.Value{}
 }

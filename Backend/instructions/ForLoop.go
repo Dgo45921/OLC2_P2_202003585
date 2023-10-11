@@ -18,6 +18,6 @@ func NewFor(lin int, col int, id string, rangge interfaces.Expression, insBlock 
 	return For{lin, col, id, rangge, insBlock}
 }
 
-func (p For) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p For) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }

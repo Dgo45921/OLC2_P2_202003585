@@ -16,6 +16,6 @@ func NewRemoveLastVector(lin int, col int, id string) RemoveLastVector {
 	return asig
 }
 
-func (p RemoveLastVector) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
-	return nil
+func (p RemoveLastVector) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	return environment.Value{}
 }
