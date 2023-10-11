@@ -162,7 +162,7 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 				gen.AddGoto(lvl2)
 				gen.AddLabel(lvl1)
 				//gen.AddExpression(newTemp, op1.Value, op2.Value, "%")
-				gen.AddCustom("fmod(" + op1.Value + "," + op2.Value + ");")
+				gen.AddExpression(newTemp, "fmod("+op1.Value, op2.Value+")", ",")
 				gen.AddLabel(lvl2)
 				result = environment.NewValue(newTemp, true, dominante)
 				return result

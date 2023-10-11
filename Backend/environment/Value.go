@@ -1,13 +1,15 @@
 package environment
 
 type Value struct {
-	Value      string
-	IsTemp     bool
-	Type       TipoExpresion
-	TrueLabel  []interface{}
-	FalseLabel []interface{}
-	OutLabel   []interface{}
-	IntValue   int
+	Value        string
+	IsTemp       bool
+	Type         TipoExpresion
+	TrueLabel    []interface{}
+	FalseLabel   []interface{}
+	OutLabel     []interface{}
+	IntValue     int
+	BreakFlag    bool
+	ContinueFlag bool
 }
 
 func NewValue(Val string, tmp bool, typ TipoExpresion) Value {
