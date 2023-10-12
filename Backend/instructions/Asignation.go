@@ -4,6 +4,7 @@ import (
 	"PY1/environment"
 	"PY1/generator"
 	"PY1/interfaces"
+	"strconv"
 )
 
 type Asignation struct {
@@ -19,7 +20,16 @@ func NewAsignation(lin int, col int, id string, val interfaces.Expression) Asign
 }
 
 func (p Asignation) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
-	return environment.Value{}
+	var result environment.Value
+	gen.AddComment("Generando asignacion")
+	//buscando variable en entorno
+	variable := env.(environment.Environment).FindVar(p.Id)
+	//ejecutando valor
+	result = p.Expression.Execute(ast, env, gen)
+	//realizando asignacion
+	gen.AddSetStack(strconv.Itoa(variable.Position), result.Value)
+	gen.AddBr()
+	return result
 }
 
 func DeepCopyArray(source interface{}) interface{} {

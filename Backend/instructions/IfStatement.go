@@ -109,6 +109,6 @@ func (p If) Execute(ast *environment.AST, env interface{}, gen *generator.Genera
 	}
 
 	OutLvls = append(OutLvls, newLabel)
-	result.OutLabel = OutLvls
+	result.OutLabel = DeepCopyArray(OutLvls).([]interface{})
 	return result
 }

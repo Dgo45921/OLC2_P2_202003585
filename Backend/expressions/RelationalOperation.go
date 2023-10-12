@@ -72,7 +72,6 @@ func (o RelationalOperation) Execute(ast *environment.AST, env interface{}, gen 
 			}
 			dominante = tablaDominante[op1.Type][op2.Type]
 			if dominante == environment.INTEGER || dominante == environment.FLOAT {
-
 				trueLabel := gen.NewLabel()
 				falseLabel := gen.NewLabel()
 
