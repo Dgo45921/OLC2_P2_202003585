@@ -656,8 +656,8 @@ callfuncins returns [interfaces.Instruction newcallfuncins]
 // EXPRESSIONS -----------------------------------------------------------------
 
 cast returns [interfaces.Expression newcast]
-: RINT PARIZQ expr PARDER {$newcast = expressions.NewCast($RINT.line, $RINT.pos, "Int", $expr.e)}
-| RSTRING PARIZQ expr PARDER {$newcast =expressions.NewCast( $RSTRING.line, $RSTRING.pos, "String", $expr.e)}
+: RINT PARIZQ expr PARDER { $newcast = expressions.NewArithmeticOperation($RINT.line, $RINT.pos, $expr.e, $RINT.text, $expr.e) }
+| RSTRING PARIZQ expr PARDER { $newcast = expressions.NewArithmeticOperation($RSTRING.line, $RSTRING.pos, $expr.e, $RSTRING.text, $expr.e) }
 | RFLOAT PARIZQ expr PARDER {$newcast = expressions.NewCast($RFLOAT.line, $RFLOAT.pos, "Float", $expr.e)}
 ;
 

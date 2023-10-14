@@ -19883,7 +19883,7 @@ func (p *SwiftGrammarParser) Cast() (localctx ICastContext) {
 				goto errorExit
 			}
 		}
-		localctx.(*CastContext).newcast = expressions.NewCast((func() int {
+		localctx.(*CastContext).newcast = expressions.NewArithmeticOperation((func() int {
 			if localctx.(*CastContext).Get_RINT() == nil {
 				return 0
 			} else {
@@ -19895,7 +19895,13 @@ func (p *SwiftGrammarParser) Cast() (localctx ICastContext) {
 			} else {
 				return localctx.(*CastContext).Get_RINT().GetColumn()
 			}
-		}()), "Int", localctx.(*CastContext).Get_expr().GetE())
+		}()), localctx.(*CastContext).Get_expr().GetE(), (func() string {
+			if localctx.(*CastContext).Get_RINT() == nil {
+				return ""
+			} else {
+				return localctx.(*CastContext).Get_RINT().GetText()
+			}
+		}()), localctx.(*CastContext).Get_expr().GetE())
 
 	case SwiftGrammarParserRSTRING:
 		p.EnterOuterAlt(localctx, 2)
@@ -19933,7 +19939,7 @@ func (p *SwiftGrammarParser) Cast() (localctx ICastContext) {
 				goto errorExit
 			}
 		}
-		localctx.(*CastContext).newcast = expressions.NewCast((func() int {
+		localctx.(*CastContext).newcast = expressions.NewArithmeticOperation((func() int {
 			if localctx.(*CastContext).Get_RSTRING() == nil {
 				return 0
 			} else {
@@ -19945,7 +19951,13 @@ func (p *SwiftGrammarParser) Cast() (localctx ICastContext) {
 			} else {
 				return localctx.(*CastContext).Get_RSTRING().GetColumn()
 			}
-		}()), "String", localctx.(*CastContext).Get_expr().GetE())
+		}()), localctx.(*CastContext).Get_expr().GetE(), (func() string {
+			if localctx.(*CastContext).Get_RSTRING() == nil {
+				return ""
+			} else {
+				return localctx.(*CastContext).Get_RSTRING().GetText()
+			}
+		}()), localctx.(*CastContext).Get_expr().GetE())
 
 	case SwiftGrammarParserRFLOAT:
 		p.EnterOuterAlt(localctx, 3)

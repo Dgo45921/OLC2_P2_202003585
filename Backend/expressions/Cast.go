@@ -21,7 +21,19 @@ func NewCast(lin int, col int, valor string, tipo interfaces.Expression) Cast {
 }
 
 func (p Cast) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
-	var result environment.Value
+	var result, tmp environment.Value
+	if p.CastingType == "String" {
+		tmp = p.Val.(interfaces.Expression).Execute(ast, env, gen)
+		if tmp.Type == environment.STRING || tmp.Type == environment.INTEGER || tmp.Type == environment.FLOAT {
+			tmp.Type = environment.STRING
+			result = tmp
+		} else {
+			ast.SetError(p.Lin, p.Col, "No se pudo castear a string")
+		}
+
+		return result
+	}
+
 	return result
 }
 

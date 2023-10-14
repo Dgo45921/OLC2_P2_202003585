@@ -15,7 +15,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 )
 
 var lastGivencode = ""
@@ -92,13 +91,7 @@ func Parse(w http.ResponseWriter, r *http.Request) {
 	Generator.MainCode = true
 	//ejecución
 	for _, inst := range Code {
-		val := inst.(interfaces.Instruction).Execute(&Ast, newEnv, &Generator)
-		val2 := fmt.Sprintf("%T", inst)
-		if !strings.Contains(val2, "instructions.While") {
-			for _, lvl := range val.OutLabel {
-				Generator.AddLabel(lvl.(string))
-			}
-		}
+		inst.(interfaces.Instruction).Execute(&Ast, newEnv, &Generator)
 	}
 	Generator.GenerateFinalCode()
 	var ConsoleOut = ""

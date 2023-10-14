@@ -15,7 +15,7 @@ func NewContinue(lin int, col int) Continue {
 	return breakInstr
 }
 
-func (p Continue) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value{
+func (p Continue) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 
 	return environment.Value{ContinueFlag: true}
 }
