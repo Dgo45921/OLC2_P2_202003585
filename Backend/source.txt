@@ -1,1 +1,3 @@
-print(Int("88"))
+
+
+print(Int("10"))

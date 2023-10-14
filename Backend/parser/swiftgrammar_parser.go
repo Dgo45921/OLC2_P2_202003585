@@ -19995,7 +19995,7 @@ func (p *SwiftGrammarParser) Cast() (localctx ICastContext) {
 				goto errorExit
 			}
 		}
-		localctx.(*CastContext).newcast = expressions.NewCast((func() int {
+		localctx.(*CastContext).newcast = expressions.NewArithmeticOperation((func() int {
 			if localctx.(*CastContext).Get_RFLOAT() == nil {
 				return 0
 			} else {
@@ -20007,7 +20007,13 @@ func (p *SwiftGrammarParser) Cast() (localctx ICastContext) {
 			} else {
 				return localctx.(*CastContext).Get_RFLOAT().GetColumn()
 			}
-		}()), "Float", localctx.(*CastContext).Get_expr().GetE())
+		}()), localctx.(*CastContext).Get_expr().GetE(), (func() string {
+			if localctx.(*CastContext).Get_RFLOAT() == nil {
+				return ""
+			} else {
+				return localctx.(*CastContext).Get_RFLOAT().GetText()
+			}
+		}()), localctx.(*CastContext).Get_expr().GetE())
 
 	default:
 		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
