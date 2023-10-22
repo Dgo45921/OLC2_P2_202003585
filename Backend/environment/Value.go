@@ -8,6 +8,7 @@ type Value struct {
 	FalseLabel   []interface{}
 	OutLabel     []interface{}
 	IntValue     int
+	FloatValue   float64
 	BreakFlag    bool
 	ContinueFlag bool
 }

@@ -26,6 +26,7 @@ func (p Primitive) Execute(ast *environment.AST, env interface{}, gen *generator
 		result.IntValue = p.Valor.(int)
 	} else if p.Type == environment.FLOAT {
 		result = environment.NewValue(fmt.Sprintf("%v", p.Valor), false, p.Type)
+		result.FloatValue = p.Valor.(float64)
 	} else if p.Type == environment.NULL {
 		result = environment.NewValue("NULLPTR", false, p.Type)
 	} else if p.Type == environment.STRING || p.Type == environment.CHAR {

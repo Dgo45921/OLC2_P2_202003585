@@ -5,6 +5,7 @@ import (
 	"PY1/generator"
 	"PY1/interfaces"
 	"fmt"
+	"strconv"
 )
 
 type ArithmeticOperation struct {
@@ -56,6 +57,7 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 				gen.AddExpression(newTemp, op1.Value, op2.Value, "+")
 				result = environment.NewValue(newTemp, true, dominante)
 				result.IntValue = op1.IntValue + op2.IntValue
+				result.FloatValue = op1.FloatValue + op2.FloatValue
 				return result
 			} else if dominante == environment.STRING {
 				//llamar a generar concatstring
@@ -354,126 +356,98 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 
 	case "Float":
 		{
-			op1 = o.OpIzq.Execute(ast, env, gen)
-			gen.AddComment("----FLOAT CAST---")
-			t2 := gen.NewTemp()
-			t3 := gen.NewTemp()
-			t4 := gen.NewTemp()
-			tpeso := gen.NewTemp()
 
-			L1 := gen.NewLabel()
-			L2 := gen.NewLabel()
-			L3 := gen.NewLabel()
-			L4 := gen.NewLabel()
-			L5 := gen.NewLabel()
-
-			gen.AddAssign(tpeso, "1")
-			gen.AddAssign(t2, op1.Value)
-			gen.AddAssign(t3, "0")
-			gen.AddLabel(L4)
-			gen.AddAssign(t4, "heap[(int)"+t2+"]")
-			gen.AddIf(t4, "-1", "==", L1)
-			gen.AddComment("viendo si solo numeros")
-			gen.AddIf(t4, "48", "<", L5)
-			gen.AddIf(t4, "57", ">", L5)
-
-			gen.AddGoto(L2)
-			gen.AddLabel(L1)
-
-			gen.AddGoto(L3)
-			gen.AddLabel(L2)
-			gen.AddAssign(t3, t2)
-			gen.AddExpression(t2, t2, "1", "+")
-			gen.AddGoto(L4)
-			gen.AddLabel(L3)
-
-			t5 := gen.NewTemp()
-			t6 := gen.NewTemp()
-			L6 := gen.NewLabel()
-			L7 := gen.NewLabel()
-			tresultado := gen.NewTemp()
-			LSalir := gen.NewLabel()
-
-			gen.AddAssign(t5, t3)
-			LRec := gen.NewLabel()
-
-			gen.AddLabel(LRec)
-			gen.AddAssign(t6, "heap[(int)"+t5+"]")
-			gen.AddIf(t6, "-2", "==", L6)
-			gen.AddIf(t6, "-3", "==", L5)
-			gen.AddIf(t6, "-1", "==", LSalir)
-			gen.AddIf(t5, "-1", "==", LSalir)
-			gen.AddGoto(L7)
-
-			gen.AddLabel(L6)
-			gen.AddExpression(t5, t5, "1", "-")
-			gen.AddAssign(tresultado, "heap[(int)"+t5+"]")
-			gen.AddGoto(LSalir)
-
-			gen.AddLabel(L7)
-			tmpComparar := gen.NewTemp()
-			L8 := gen.NewLabel()
-			L9 := gen.NewLabel()
-			gen.AddAssign(tmpComparar, "heap[(int)"+t5+"]")
-			gen.AddIf(tpeso, "1", "==", L8)
-			gen.AddGoto(L9)
-			gen.AddLabel(L8)
-
-			tmpOperar := gen.NewTemp()
-			gen.AddExpression(tmpComparar, tmpComparar, "48", "-")
-			gen.AddExpression(tmpOperar, tmpComparar, "1", "*")
-			gen.AddExpression(tresultado, tresultado, tmpOperar, "+")
-			gen.AddExpression(t5, t5, "1", "-")
-			gen.AddExpression(tpeso, tpeso, "10", "*")
-			gen.AddGoto(LRec)
-
-			gen.AddLabel(L9)
-			tmpOperar2 := gen.NewTemp()
-			gen.AddExpression(tmpComparar, tmpComparar, "48", "-")
-			gen.AddExpression(tmpOperar2, tmpComparar, tpeso, "*")
-			gen.AddExpression(tresultado, tresultado, tmpOperar2, "+")
-			gen.AddExpression(t5, t5, "1", "-")
-			gen.AddExpression(tpeso, tpeso, "10", "*")
-			gen.AddGoto(LRec)
-
-			gen.AddLabel(L5)
-			gen.AddComment("No se puede convertir la cadena a INT")
-			gen.AddPrintf("c", "78")
-			gen.AddPrintf("c", "111")
-			gen.AddPrintf("c", "32")
-			gen.AddPrintf("c", "115")
-			gen.AddPrintf("c", "101")
-			gen.AddPrintf("c", "32")
-			gen.AddPrintf("c", "112")
-			gen.AddPrintf("c", "117")
-			gen.AddPrintf("c", "101")
-			gen.AddPrintf("c", "100")
-			gen.AddPrintf("c", "101")
-			gen.AddPrintf("c", "32")
-			gen.AddPrintf("c", "99")
-			gen.AddPrintf("c", "111")
-			gen.AddPrintf("c", "110")
-			gen.AddPrintf("c", "118")
-			gen.AddPrintf("c", "101")
-			gen.AddPrintf("c", "114")
-			gen.AddPrintf("c", "116")
-			gen.AddPrintf("c", "105")
-			gen.AddPrintf("c", "114")
-			gen.AddPrintf("c", "32")
-			gen.AddPrintf("c", "97")
-			gen.AddPrintf("c", "32")
-			gen.AddPrintf("c", "73")
-			gen.AddPrintf("c", "78")
-			gen.AddPrintf("c", "84")
-			gen.AddGoto(LSalir)
-			gen.AddLabel(LSalir)
-
-			val := environment.Value{Value: tresultado, IsTemp: true, Type: environment.FLOAT}
-			return val
 		}
 
 	case "String":
-		// todo string cast
+		op1 = o.OpIzq.Execute(ast, env, gen)
+		if op1.Type == environment.INTEGER {
+
+			numeroStr := strconv.Itoa(op1.IntValue) // Convierte el número a una cadena de caracteres
+
+			tmp := gen.NewTemp()
+			gen.AddAssign(tmp, "H")
+
+			for _, char := range numeroStr {
+				ascii := int(char)
+				gen.AddSetHeap("(int)H", strconv.Itoa(ascii))
+				gen.AddExpression("H", "H", "1", "+")
+			}
+			//indica el fin de la cadenas
+			gen.AddSetHeap("(int)H", "-1")
+			gen.AddExpression("H", "H", "1", "+")
+			val := environment.Value{Value: tmp, IsTemp: true, Type: environment.STRING}
+			return val
+		} else if op1.Type == environment.FLOAT {
+
+			numeroStr := strconv.FormatFloat(op1.FloatValue, 'f', -1, 64)
+
+			tmp := gen.NewTemp()
+			gen.AddAssign(tmp, "H")
+
+			for _, char := range numeroStr {
+				ascii := int(char)
+				gen.AddSetHeap("(int)H", strconv.Itoa(ascii))
+				gen.AddExpression("H", "H", "1", "+")
+			}
+			//indica el fin de la cadenas
+			gen.AddSetHeap("(int)H", "-1")
+			gen.AddExpression("H", "H", "1", "+")
+			val := environment.Value{Value: tmp, IsTemp: true, Type: environment.STRING}
+			return val
+		} else if op1.Type == environment.BOOLEAN {
+			//cout<<"ENTRA EN EXP BOOL   \n"<<op1.Value<<endl;
+			labelTrue := gen.NewLabel()
+			labelFalse := gen.NewLabel()
+			labelSalir := gen.NewLabel()
+			tmp := gen.NewTemp()
+			gen.AddIf(op1.Value, "1", "==", labelTrue)
+			gen.AddGoto(labelFalse)
+
+			//TRUE
+			gen.AddLabel(labelTrue)
+			gen.AddAssign(tmp, "H")
+			//concatenar true
+			gen.AddComment("t")
+			gen.AddSetHeap("(int)H", "116")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddComment("r")
+			gen.AddSetHeap("(int)H", "114")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddComment("u")
+			gen.AddSetHeap("(int)H", "117")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddComment("e")
+			gen.AddSetHeap("(int)H", "101")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddSetHeap("(int)H", "-1")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddGoto(labelSalir)
+			//FALSE
+			gen.AddLabel(labelFalse)
+			gen.AddAssign(tmp, "H")
+			gen.AddComment("f")
+			gen.AddSetHeap("(int)H", "102")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddComment("a")
+			gen.AddSetHeap("(int)H", "97")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddComment("l")
+			gen.AddSetHeap("(int)H", "108")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddComment("s")
+			gen.AddSetHeap("(int)H", "115")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddComment("e")
+			gen.AddSetHeap("(int)H", "101")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddSetHeap("(int)H", "-1")
+			gen.AddExpression("H", "H", "1", "+")
+			gen.AddGoto(labelSalir)
+			gen.AddLabel(labelSalir)
+			val := environment.Value{Value: tmp, IsTemp: true, Type: environment.STRING}
+			return val
+		}
 	}
 	gen.AddBr()
 	return environment.Value{}
