@@ -25,7 +25,7 @@ func (p Guard) Execute(ast *environment.AST, env interface{}, gen *generator.Gen
 	condicion = p.Condition.Execute(ast, env, gen) //imprime el if de operacion
 	retorno := gen.NewLabel()                      //salida
 	//*****************************************add true labels
-	for _, lvl := range condicion.TrueLabel {
+	for _, lvl := range condicion.FalseLabel {
 		gen.AddLabel(lvl.(string))
 	}
 	//instrucciones if
@@ -56,7 +56,7 @@ func (p Guard) Execute(ast *environment.AST, env interface{}, gen *generator.Gen
 	}
 
 	// adding false labels
-	for _, lvl := range condicion.FalseLabel {
+	for _, lvl := range condicion.TrueLabel {
 		gen.AddLabel(lvl.(string))
 	}
 

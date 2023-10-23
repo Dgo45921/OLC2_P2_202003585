@@ -5,32 +5,32 @@ import (
 )
 
 type Generator struct {
-	Temporal        int
-	Label           int
-	Code            []interface{}
-	FinalCode       []interface{}
-	Natives         []interface{}
-	FuncCode        []interface{}
-	TempList        []interface{}
-	PrintStringFlag bool
+	Temporal         int
+	Label            int
+	Code             []interface{}
+	FinalCode        []interface{}
+	Natives          []interface{}
+	FuncCode         []interface{}
+	TempList         []interface{}
+	PrintStringFlag  bool
 	ConcatStringFlag bool
-	BreakLabel      string
-	ContinueLabel   string
-	MainCode        bool
-	Flag            bool
-	Auxlvl          string
+	BreakLabel       string
+	ContinueLabel    string
+	MainCode         bool
+	Flag             bool
+	Auxlvl           string
 }
 
 func NewGenerator() Generator {
 	generator := Generator{
-		Temporal:        0,
-		Label:           0,
-		BreakLabel:      "",
-		ContinueLabel:   "",
-		PrintStringFlag: true,
+		Temporal:         0,
+		Label:            0,
+		BreakLabel:       "",
+		ContinueLabel:    "",
+		PrintStringFlag:  true,
 		ConcatStringFlag: true,
-		MainCode:        false,
-		Flag:            false,
+		MainCode:         false,
+		Flag:             false,
 	}
 	return generator
 }
@@ -65,7 +65,6 @@ func (g *Generator) NewTemp() string {
 	g.TempList = append(g.TempList, temp)
 	return temp
 }
-
 
 // Generador de Label
 func (g *Generator) NewLabel() string {
@@ -210,7 +209,7 @@ func (g *Generator) GenerateFinalCode() {
 	} else {
 		g.FinalCode = append(g.FinalCode, "comodin;")
 	}
-	g.FinalCode = append(g.FinalCode, ";\n\n")
+
 	//****************** add natives functions
 	if len(g.Natives) > 0 {
 		g.FinalCode = append(g.FinalCode, "/*------NATIVES------*/\n")
@@ -260,7 +259,6 @@ func (g *Generator) GeneratePrintString() {
 	}
 }
 
-
 func (g *Generator) GenerateConcatString() {
 	if g.ConcatStringFlag {
 		//generando temporales y etiquetas
@@ -274,33 +272,33 @@ func (g *Generator) GenerateConcatString() {
 		lvl3 := g.NewLabel()
 		lvl4 := g.NewLabel()
 		//se genera la funcion printstring
-		g.Natives = append(g.Natives,"void concat() {\n")
-		g.Natives = append(g.Natives,"\t" + tmp1 + " = H;" + "\n")
-		g.Natives = append(g.Natives,"\t" + tmp2 + " = P + 1;" + "\n")
-		g.Natives = append(g.Natives,"\t" + tmp4 + " = stack[(int)" + tmp2 + "];" + "\n")
-		g.Natives = append(g.Natives,"\t" + tmp3 + " = P + 2;" + "\n")
-		g.Natives = append(g.Natives,"\t" + lvl2 + ":" + "\n")
-		g.Natives = append(g.Natives,"\t" + tmp5 + " = heap[(int)" + tmp4 + "];" + "\n")
-		g.Natives = append(g.Natives,"\t" + "if(" + tmp5 + " == -1) goto " + lvl3 + ";" + "\n")
-		g.Natives = append(g.Natives,"\t" + "heap[(int)H] = " + tmp5 + ";" + "\n")
-		g.Natives = append(g.Natives,"\t" + "H = H + 1;" + "\n")
-		g.Natives = append(g.Natives,"\t" + tmp4 + " = " + tmp4 + " + 1;" + "\n")
-		g.Natives = append(g.Natives,"\t" + "goto " + lvl2 + ";" + "\n")
-		g.Natives = append(g.Natives,"\t" + lvl3 + ":" + "\n")
-		g.Natives = append(g.Natives,"\t" + tmp4 + " = stack[(int)" + tmp3 + "];" + "\n")
-		g.Natives = append(g.Natives,"\t" + lvl4 + ":" + "\n")
-		g.Natives = append(g.Natives,"\t" + tmp5 + " = heap[(int)" + tmp4 + "];" + "\n")
-		g.Natives = append(g.Natives,"\t" + "if(" + tmp5 + " == -1) goto " + lvl1 + ";" + "\n")
-		g.Natives = append(g.Natives,"\t" + "heap[(int)H] = " + tmp5 + ";" + "\n")
-		g.Natives = append(g.Natives,"\t" + "H = H + 1;" + "\n")
-		g.Natives = append(g.Natives,"\t" + tmp4 + " = " + tmp4 + " + 1;" + "\n")
-		g.Natives = append(g.Natives,"\t" + "goto " + lvl4 + ";" + "\n")
-		g.Natives = append(g.Natives,"\t" + lvl1 + ":" + "\n")
-		g.Natives = append(g.Natives,"\t" + "heap[(int)H] = -1;" + "\n")
-		g.Natives = append(g.Natives,"\t" + "H = H + 1;" + "\n")
-		g.Natives = append(g.Natives,"\t" + "stack[(int)P] = " + tmp1 + ";" + "\n")
-		g.Natives = append(g.Natives,"\treturn;\n")
-		g.Natives = append(g.Natives,"}\n\n")
+		g.Natives = append(g.Natives, "void concat() {\n")
+		g.Natives = append(g.Natives, "\t"+tmp1+" = H;"+"\n")
+		g.Natives = append(g.Natives, "\t"+tmp2+" = P + 1;"+"\n")
+		g.Natives = append(g.Natives, "\t"+tmp4+" = stack[(int)"+tmp2+"];"+"\n")
+		g.Natives = append(g.Natives, "\t"+tmp3+" = P + 2;"+"\n")
+		g.Natives = append(g.Natives, "\t"+lvl2+":"+"\n")
+		g.Natives = append(g.Natives, "\t"+tmp5+" = heap[(int)"+tmp4+"];"+"\n")
+		g.Natives = append(g.Natives, "\t"+"if("+tmp5+" == -1) goto "+lvl3+";"+"\n")
+		g.Natives = append(g.Natives, "\t"+"heap[(int)H] = "+tmp5+";"+"\n")
+		g.Natives = append(g.Natives, "\t"+"H = H + 1;"+"\n")
+		g.Natives = append(g.Natives, "\t"+tmp4+" = "+tmp4+" + 1;"+"\n")
+		g.Natives = append(g.Natives, "\t"+"goto "+lvl2+";"+"\n")
+		g.Natives = append(g.Natives, "\t"+lvl3+":"+"\n")
+		g.Natives = append(g.Natives, "\t"+tmp4+" = stack[(int)"+tmp3+"];"+"\n")
+		g.Natives = append(g.Natives, "\t"+lvl4+":"+"\n")
+		g.Natives = append(g.Natives, "\t"+tmp5+" = heap[(int)"+tmp4+"];"+"\n")
+		g.Natives = append(g.Natives, "\t"+"if("+tmp5+" == -1) goto "+lvl1+";"+"\n")
+		g.Natives = append(g.Natives, "\t"+"heap[(int)H] = "+tmp5+";"+"\n")
+		g.Natives = append(g.Natives, "\t"+"H = H + 1;"+"\n")
+		g.Natives = append(g.Natives, "\t"+tmp4+" = "+tmp4+" + 1;"+"\n")
+		g.Natives = append(g.Natives, "\t"+"goto "+lvl4+";"+"\n")
+		g.Natives = append(g.Natives, "\t"+lvl1+":"+"\n")
+		g.Natives = append(g.Natives, "\t"+"heap[(int)H] = -1;"+"\n")
+		g.Natives = append(g.Natives, "\t"+"H = H + 1;"+"\n")
+		g.Natives = append(g.Natives, "\t"+"stack[(int)P] = "+tmp1+";"+"\n")
+		g.Natives = append(g.Natives, "\treturn;\n")
+		g.Natives = append(g.Natives, "}\n\n")
 		g.ConcatStringFlag = false
 	}
 }
