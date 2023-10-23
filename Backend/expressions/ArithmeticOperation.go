@@ -356,6 +356,124 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 
 	case "Float":
 		{
+			{
+				op1 = o.OpIzq.Execute(ast, env, gen)
+				gen.AddComment("----FLOAT CAST---")
+				t2 := gen.NewTemp()
+				t3 := gen.NewTemp()
+				t4 := gen.NewTemp()
+				tpeso := gen.NewTemp()
+
+				L1 := gen.NewLabel()
+				L2 := gen.NewLabel()
+				L3 := gen.NewLabel()
+				L4 := gen.NewLabel()
+				L5 := gen.NewLabel()
+
+				gen.AddAssign(tpeso, "1")
+				gen.AddAssign(t2, op1.Value)
+				gen.AddAssign(t3, "0")
+				gen.AddLabel(L4)
+				gen.AddAssign(t4, "heap[(int)"+t2+"]")
+				gen.AddIf(t4, "-1", "==", L1)
+				gen.AddComment("viendo si solo numeros")
+				gen.AddIf(t4, "48", "<", L5)
+				gen.AddIf(t4, "57", ">", L5)
+				gen.AddIf(t4, "46", "!=", L5)
+				gen.AddGoto(L2)
+				gen.AddLabel(L1)
+
+				gen.AddGoto(L3)
+				gen.AddLabel(L2)
+				gen.AddAssign(t3, t2)
+				gen.AddExpression(t2, t2, "1", "+")
+				gen.AddGoto(L4)
+				gen.AddLabel(L3)
+
+				t5 := gen.NewTemp()
+				t6 := gen.NewTemp()
+				L6 := gen.NewLabel()
+				L7 := gen.NewLabel()
+				tresultado := gen.NewTemp()
+				LSalir := gen.NewLabel()
+
+				gen.AddAssign(t5, t3)
+				LRec := gen.NewLabel()
+
+				gen.AddLabel(LRec)
+				gen.AddAssign(t6, "heap[(int)"+t5+"]")
+				gen.AddIf(t6, "-2", "==", L6)
+				gen.AddIf(t6, "-3", "==", L5)
+				gen.AddIf(t6, "-1", "==", LSalir)
+				gen.AddIf(t5, "-1", "==", LSalir)
+				gen.AddGoto(L7)
+
+				gen.AddLabel(L6)
+				gen.AddExpression(t5, t5, "1", "-")
+				gen.AddAssign(tresultado, "heap[(int)"+t5+"]")
+				gen.AddGoto(LSalir)
+
+				gen.AddLabel(L7)
+				tmpComparar := gen.NewTemp()
+				L8 := gen.NewLabel()
+				L9 := gen.NewLabel()
+				gen.AddAssign(tmpComparar, "heap[(int)"+t5+"]")
+				gen.AddIf(tpeso, "1", "==", L8)
+				gen.AddGoto(L9)
+				gen.AddLabel(L8)
+
+				tmpOperar := gen.NewTemp()
+				gen.AddExpression(tmpComparar, tmpComparar, "48", "-")
+				gen.AddExpression(tmpOperar, tmpComparar, "1", "*")
+				gen.AddExpression(tresultado, tresultado, tmpOperar, "+")
+				gen.AddExpression(t5, t5, "1.0", "-")
+				gen.AddExpression(tpeso, tpeso, "10.00", "*")
+				gen.AddGoto(LRec)
+
+				gen.AddLabel(L9)
+				tmpOperar2 := gen.NewTemp()
+				gen.AddExpression(tmpComparar, tmpComparar, "48", "-")
+				gen.AddExpression(tmpOperar2, tmpComparar, tpeso, "*")
+				gen.AddExpression(tresultado, tresultado, tmpOperar2, "+")
+				gen.AddExpression(t5, t5, "1.0", "-")
+				gen.AddExpression(tpeso, tpeso, "10.00", "*")
+				gen.AddGoto(LRec)
+
+				gen.AddLabel(L5)
+				gen.AddComment("No se puede convertir la cadena a INT")
+				gen.AddPrintf("c", "78")
+				gen.AddPrintf("c", "111")
+				gen.AddPrintf("c", "32")
+				gen.AddPrintf("c", "115")
+				gen.AddPrintf("c", "101")
+				gen.AddPrintf("c", "32")
+				gen.AddPrintf("c", "112")
+				gen.AddPrintf("c", "117")
+				gen.AddPrintf("c", "101")
+				gen.AddPrintf("c", "100")
+				gen.AddPrintf("c", "101")
+				gen.AddPrintf("c", "32")
+				gen.AddPrintf("c", "99")
+				gen.AddPrintf("c", "111")
+				gen.AddPrintf("c", "110")
+				gen.AddPrintf("c", "118")
+				gen.AddPrintf("c", "101")
+				gen.AddPrintf("c", "114")
+				gen.AddPrintf("c", "116")
+				gen.AddPrintf("c", "105")
+				gen.AddPrintf("c", "114")
+				gen.AddPrintf("c", "32")
+				gen.AddPrintf("c", "97")
+				gen.AddPrintf("c", "32")
+				gen.AddPrintf("c", "73")
+				gen.AddPrintf("c", "78")
+				gen.AddPrintf("c", "84")
+				gen.AddGoto(LSalir)
+				gen.AddLabel(LSalir)
+
+				val := environment.Value{Value: tresultado, IsTemp: true, Type: environment.INTEGER}
+				return val
+			}
 
 		}
 
@@ -397,6 +515,10 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 			return val
 		} else if op1.Type == environment.BOOLEAN {
 			//cout<<"ENTRA EN EXP BOOL   \n"<<op1.Value<<endl;
+			for _, lvl := range op1.TrueLabel {
+				gen.AddLabel(lvl.(string))
+			}
+
 			labelTrue := gen.NewLabel()
 			labelFalse := gen.NewLabel()
 			labelSalir := gen.NewLabel()
@@ -424,6 +546,9 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 			gen.AddExpression("H", "H", "1", "+")
 			gen.AddGoto(labelSalir)
 			//FALSE
+			for _, lvl := range op1.FalseLabel {
+				gen.AddLabel(lvl.(string))
+			}
 			gen.AddLabel(labelFalse)
 			gen.AddAssign(tmp, "H")
 			gen.AddComment("f")

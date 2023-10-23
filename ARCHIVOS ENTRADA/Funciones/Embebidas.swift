@@ -3,13 +3,13 @@ print("---FUNCIONES EMBEBIDAS----");
 print("--------------------------");
 
 print("");
-let num1 = Int("20")
-let num2 = Int("20")
-let suma = String(num1 + num2)
-let num3 = Float("9.5")
-let num4 = Float("3.6")
-let resta = String(num3 - num4)
-let cadena = String(true) + "->" + String(3.504)
+var num1 = Int("20")
+var num2 = Int("20")
+var suma = num1 + num2
+var num3 = 9.5
+var num4 = 3.6
+var resta = num3 - num4
+var cadena = String(true) + "->" + String(3.504)
 
 print("valor 1: ", suma)
 print("valor 2: ", resta)
