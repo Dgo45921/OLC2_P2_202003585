@@ -24,8 +24,11 @@ func NewVecDec(lin int, col int, id string, tyype string, deftype interface{}, e
 
 func (p VecDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	var result, val environment.Value
-	var arrType environment.TipoExpresion
 	size := len(p.Exp.(expressions.Vector).Value)
+	if env.(environment.Environment).VariableExists(p.Id) {
+		ast.SetError(p.Lin, p.Col, "Error, variable ya declarada!")
+		return environment.Value{}
+	}
 	//generando array
 	gen.AddComment("Generando array")
 	newtmp1 := gen.NewTemp()
@@ -37,14 +40,13 @@ func (p VecDec) Execute(ast *environment.AST, env interface{}, gen *generator.Ge
 	//recorriendo lista de expressiones
 	for _, s := range p.Exp.(expressions.Vector).Value {
 		val = s.(interfaces.Expression).Execute(ast, env, gen)
-		arrType = val.Type
 		gen.AddSetHeap("(int)"+newtmp2, val.Value)
 		gen.AddExpression(newtmp2, newtmp2, "1", "+")
 	}
 	result = environment.Value{
 		Value:        newtmp1,
 		IsTemp:       true,
-		Type:         getType(arrType),
+		Type:         getType(val.Type),
 		TrueLabel:    nil,
 		FalseLabel:   nil,
 		OutLabel:     nil,
@@ -54,6 +56,7 @@ func (p VecDec) Execute(ast *environment.AST, env interface{}, gen *generator.Ge
 		ContinueFlag: false,
 	}
 
+	env.(environment.Environment).SaveVariable(p.Id, result.Type)
 	return result
 
 }

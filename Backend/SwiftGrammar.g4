@@ -239,9 +239,9 @@ removelastvec returns [interfaces.Instruction newremovelastvec]
 
 
 vecdec returns [interfaces.Instruction newvecdec]
-: RVAR expr DOSPTOS OBRA typpe=(RINT|RFLOAT|RBOOL|RSTRING|RCHARACTER|ID) CBRA IG OBRA typpe2=(RINT|RFLOAT|RBOOL|RSTRING|RCHARACTER) CBRA OBRA CBRA {$newvecdec = instructions.NewVecDec($RVAR.line, $RVAR.pos, $expr.e, $typpe.text, $typpe2.text, nil )}
-| RVAR firstid=expr DOSPTOS  OBRA typpe=(RINT|RFLOAT|RBOOL|RSTRING|RCHARACTER|ID) CBRA IG expr {$newvecdec = instructions.NewVecDec($RVAR.line, $RVAR.pos, $firstid.e, $typpe.text, nil,$expr.e )}
-| RVAR id1 = expr IG OBRA id2=ID CBRA PARIZQ PARDER {$newvecdec = instructions.NewVecDec($RVAR.line, $RVAR.pos, $id1.e, $id2.text, nil, nil )}
+: RVAR ID DOSPTOS OBRA typpe=(RINT|RFLOAT|RBOOL|RSTRING|RCHARACTER|ID) CBRA IG OBRA typpe2=(RINT|RFLOAT|RBOOL|RSTRING|RCHARACTER) CBRA OBRA CBRA {$newvecdec = instructions.NewVecDec($RVAR.line, $RVAR.pos, $ID.text, $typpe.text, $typpe2.text, nil )}
+| RVAR firstid=ID DOSPTOS  OBRA typpe=(RINT|RFLOAT|RBOOL|RSTRING|RCHARACTER|ID) CBRA IG expr {$newvecdec = instructions.NewVecDec($RVAR.line, $RVAR.pos, $firstid.text, $typpe.text, nil,$expr.e )}
+| RVAR id1 = ID IG OBRA id2=ID CBRA PARIZQ PARDER {$newvecdec = instructions.NewVecDec($RVAR.line, $RVAR.pos, $id1.text, $id2.text, nil, nil )}
 ;
 
 breakstatement returns [interfaces.Instruction newbreak]
@@ -358,7 +358,7 @@ countvec returns [interfaces.Expression newcountvec]
 
 //-----------------------
 vectoraccess returns [interfaces.Expression newvecaccess]
-: ID OBRA expr CBRA  {$newvecaccess = expressions.NewVectorAccess($ID.line, $ID.pos,$ID.text, $expr.e)}
+: ID indexesList  {$newvecaccess = expressions.NewVectorAccess($ID.line, $ID.pos,$ID.text, $indexesList.indexes)}
 ;
 
 structaccess returns [interfaces.Expression saccess]
