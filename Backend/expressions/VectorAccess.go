@@ -24,10 +24,10 @@ func (p VectorAccess) Execute(ast *environment.AST, env interface{}, gen *genera
 
 	prueba := VariableAccess{ID: p.Id}
 
-	tempArray = prueba.Execute(ast, env, gen) //se ejecuta el array -> *arr*[5] retorna un temporal
+	tempArray = prueba.Execute(ast, env, gen)
 
 	if len(p.Index) == 1 {
-		tempIndex = p.Index[0].(interfaces.Expression).Execute(ast, env, gen) //se ejecuta el indice -> arr[*5*] retorna un temporal
+		tempIndex = p.Index[0].(interfaces.Expression).Execute(ast, env, gen)
 		//llamada
 		newTmp := gen.NewTemp()
 		lvl1 := gen.NewLabel()

@@ -1,3 +1,8 @@
-var prueba:[Int] = [1,2,3]
+
+var prueba:[Int] = [1,2,3,4,5]
+
+
 
 print(prueba[2])
+
+print(prueba.count)
