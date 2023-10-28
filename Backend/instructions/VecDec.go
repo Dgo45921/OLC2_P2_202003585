@@ -56,7 +56,11 @@ func (p VecDec) Execute(ast *environment.AST, env interface{}, gen *generator.Ge
 		ContinueFlag: false,
 	}
 
-	env.(environment.Environment).SaveVariable(p.Id, result.Type)
+	newVar:= env.(environment.Environment).SaveVector(p.Id, result.Type, size)
+
+	gen.AddSetStack(strconv.Itoa(newVar.Position), result.Value)
+	gen.AddBr()
+
 	return result
 
 }

@@ -58,6 +58,16 @@ func (env Environment) SaveVariable(id string, tyype TipoExpresion) Symbol {
 	return env.SymbolTable[id]
 }
 
+func (env Environment) SaveVector(id string, tyype TipoExpresion, size int) Symbol {
+	if variable, ok := env.SymbolTable[id]; ok {
+		fmt.Println("La variable "+id+" ya existe ", variable)
+		return env.SymbolTable[id]
+	}
+	env.SymbolTable[id] = Symbol{Lin: 0, Col: 0, Type: tyype, Position: env.Size["size"] + size, Const: false}
+	env.Size["size"] = env.Size["size"] + size
+	return env.SymbolTable[id]
+}
+
 func (env Environment) SaveConst(id string, tyype TipoExpresion) Symbol {
 	if variable, ok := env.SymbolTable[id]; ok {
 		fmt.Println("La variable "+id+" ya existe ", variable)
