@@ -1,8 +1,6 @@
 
-var prueba:[Int] = [1,2,3,4,5]
+var prueba:[Int] = []
 
 
 
-print(prueba[2])
-
-print(prueba.count)
+print(prueba.isEmpty)
