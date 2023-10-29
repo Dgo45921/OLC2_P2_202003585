@@ -36,8 +36,8 @@ func (p VectorAccess) Execute(ast *environment.AST, env interface{}, gen *genera
 		gen.AddIf(tempIndex.Value, "0", "<", lvl1)
 		tmp := gen.NewTemp()
 		gen.AddGetHeap(tmp, "(int)"+tempArray.Value)
-		gen.AddIf(tempIndex.Value, tmp, ">", lvl1)
-
+		gen.AddComment("checking bounds")
+		gen.AddIf(tempIndex.Value, tmp, ">=", lvl1)
 		gen.AddGoto(lvl2)
 		gen.AddLabel(lvl1)
 		gen.AddPrintf("c", "66")

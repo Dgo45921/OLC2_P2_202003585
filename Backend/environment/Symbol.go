@@ -9,6 +9,7 @@ type Symbol struct {
 	StructType string
 	Scope      EnvType
 	Position   int
+	ArrayValues [] interface{}
 }
 
 func (s Symbol) SetnewValue(value interface{}) {
