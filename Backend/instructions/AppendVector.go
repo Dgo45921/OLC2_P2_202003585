@@ -54,7 +54,7 @@ func (p AppendVector) Execute(ast *environment.AST, env interface{}, gen *genera
 		ContinueFlag: false,
 	}
 
-	newVar := env.(environment.Environment).AppendVector(p.Id, result.Type, size + 1, foundVector.ArrayValues)
+	newVar := env.(environment.Environment).AppendVector(p.Id, result.Type, size+1, foundVector.ArrayValues)
 
 	gen.AddSetStack(strconv.Itoa(newVar.Position), result.Value)
 	gen.AddBr()

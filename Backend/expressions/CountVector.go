@@ -18,40 +18,27 @@ func NewCountVector(lin int, col int, val string) CountVector {
 
 func (p CountVector) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 
-	var result environment.Value
+	var tempArray, result environment.Value
 
-	VariableAccess{ID: p.Id}.Execute(ast, env, gen)
+	prueba := VariableAccess{ID: p.Id}
+
+	tempArray = prueba.Execute(ast, env, gen)
 
 	//llamada
 	newTmp := gen.NewTemp()
-	lvl1 := gen.NewLabel()
-	lvl2 := gen.NewLabel()
-	lvl3 := gen.NewLabel()
 
-	gen.AddGoto(lvl2)
-	gen.AddLabel(lvl1)
-	gen.AddPrintf("c", "66")
-	gen.AddPrintf("c", "111")
-	gen.AddPrintf("c", "117")
-	gen.AddPrintf("c", "110")
-	gen.AddPrintf("c", "100")
-	gen.AddPrintf("c", "115")
-	gen.AddPrintf("c", "69")
-	gen.AddPrintf("c", "114")
-	gen.AddPrintf("c", "114")
-	gen.AddPrintf("c", "111")
-	gen.AddPrintf("c", "114")
-	gen.AddGoto(lvl3)
-	gen.AddLabel(lvl2)
+	tmp := gen.NewTemp()
+	gen.AddGetHeap(tmp, "(int)"+tempArray.Value)
 
+	gen.AddExpression(newTmp, tempArray.Value, "0", "+")
+	gen.AddExpression(newTmp, newTmp, "0", "+")
 	newTmp2 := gen.NewTemp()
 	gen.AddGetHeap(newTmp2, "(int)"+newTmp)
-	gen.AddLabel(lvl3)
 
 	result = environment.Value{
 		Value:        newTmp2,
 		IsTemp:       true,
-		Type:         environment.INTEGER,
+		Type:         getInsideType(tempArray.Type),
 		TrueLabel:    nil,
 		FalseLabel:   nil,
 		OutLabel:     nil,

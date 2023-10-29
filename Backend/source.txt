@@ -1,18 +1,42 @@
+print("--------------------------");
+print("---------VECTORES---------");
+print("----------12 pts----------");
+print("--------------------------");
 
+print("")
+print("=============================================")
+print("================CREACIÓN=====================")
+print("=============================================")
 var arr1: [Int] = [8, 4, 6, 2]
+var arr2: [Int] = [40, 21, 1, 3, 14, 4]
+var arr3: [Int] = [90, 3, 40, 10, 8, 5]
+print("Se crean los arreglos arr1, arr2, arr3")
 
-print(arr1[4])
+print("")
+print("=============================================")
+print("=================ACCESO======================")
+print("=============================================")
 
+print("arr1: ", arr1[1]+4)
+print("arr2: ", 5+8*5-arr2[2])
+print("arr3: ", arr3[4]*8)
 
-// arr2.removeLast()
-// arr2.append(6)
-// print("append arr2: ", arr2[5])
+print("=============================================")
+print("================FUNCIONES====================")
+print("=============================================")
 
-// arr3.remove(at: 4)
-// print("append arr3: ", arr3[4])
+arr1.append(9)
+print("append arr1: ", arr1[4])
 
-// print("arr1 vacío: ", arr1.isEmpty)
-// print("arr1 cantidad: ", arr1.count)
+arr2.removeLast()
+arr2.append(6)
+print("append arr2: ", arr2[5])
+
+arr3.remove(at: 4)
+print("append arr3: ", arr3[4])
+
+print("arr1 vacío: ", arr1.isEmpty)
+print("arr1 cantidad: ", arr1.count)
 
 /*
 --------------------------
