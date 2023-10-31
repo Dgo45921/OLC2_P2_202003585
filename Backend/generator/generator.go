@@ -184,6 +184,29 @@ func (g *Generator) AddComment(target string) {
 	}
 }
 
+func (g *Generator) AddEnd() {
+	if g.MainCode {
+		g.Code = append(g.Code, "\treturn;\n")
+		g.Code = append(g.Code, "}\n\n")
+	} else {
+		g.FuncCode = append(g.FuncCode, "\treturn;\n")
+		g.FuncCode = append(g.FuncCode, "}\n\n")
+	}
+}
+
+
+func (g *Generator) SetMainFlag(newVal bool) {
+	g.MainCode = newVal
+}
+func (g *Generator) AddTittle(target string) {
+	if g.MainCode {
+		g.Code = append(g.Code, "void "+target+"() {\n")
+	} else {
+		g.FuncCode = append(g.FuncCode, "void "+target+"() {\n")
+
+	}
+}
+
 // agregar headers
 func (g *Generator) GenerateFinalCode() {
 	//****************** add head

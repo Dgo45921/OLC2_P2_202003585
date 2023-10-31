@@ -3,6 +3,9 @@ package instructions
 import (
 	"PY1/environment"
 	"PY1/generator"
+	"PY1/interfaces"
+	"fmt"
+	"strings"
 )
 
 type FuncDec struct {
@@ -20,7 +23,49 @@ func NewFuncDec(lin int, col int, id string, args []environment.FuncParam, ret i
 }
 
 func (p FuncDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
-	return environment.Value{}
+	var result environment.Value
+	gen.SetMainFlag(false)
+	gen.AddComment("******** Funcion " + p.Id + " ********")
+	gen.AddTittle(p.Id)
+	//entorno
+	var envFunc environment.Environment
+	envFunc = environment.NewEnvironment(env.(environment.Environment), environment.FUNC)
+	envFunc.Size["size"] = envFunc.Size["size"] + 1
+	//variables
+	for _, s := range p.Args {
+		res := prueba(s.SID, s.Type)
+		envFunc.SaveVariable(res.Value, res.Type)
+	}
+	//instrucciones func
+	for _, s := range p.insBlock {
+		if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
+			s.(interfaces.Instruction).Execute(ast, envFunc, gen)
+
+			////agregando etiquetas de salida
+			//for _, lvl := range resInst.OutLabel {
+			//	gen.AddLabel(lvl.(string))
+			//}
+
+		} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
+			result = s.(interfaces.Expression).Execute(ast, envFunc, gen)
+			//agregando etiquetas de salida
+			for _, lvl := range result.OutLabel {
+				gen.AddLabel(lvl.(string))
+			}
+		} else {
+			fmt.Println("Error en bloque")
+		}
+	}
+	gen.AddEnd()
+	gen.SetMainFlag(true)
+
+	if _, isBreak := p.ReturnType.(string); isBreak {
+		result.Type = getReturnType(p.ReturnType.(string))
+	} else {
+		result.Type = environment.NULL
+	}
+
+	return result
 }
 func getReturnType(str string) environment.TipoExpresion {
 	if str == "String" {
@@ -38,59 +83,10 @@ func getReturnType(str string) environment.TipoExpresion {
 	}
 }
 
+func prueba(id string, tyype string) environment.Value {
 
-func (p FuncDec) GetFuncDec(ast *environment.AST, env interface{}) interface{} {
+	var result environment.Value
+	result = environment.NewValue(id, false, getReturnType(tyype))
 
-	if env.(environment.Environment).Prev != nil {
-		ast.SetError(p.Lin, p.Col, "Los structs solo pueden ser declarados en el ambito global")
-		return nil
-	}
-
-	if env.(environment.Environment).FuncExists(p.Id) {
-		ast.SetError(p.Lin, p.Col, "Funcion ya declarada")
-		return nil
-
-	}
-	if len(p.Args) > 1 {
-		firstName := p.Args[0].SID
-		for i := 1; i < len(p.Args); i++ {
-			currentName := p.Args[i].SID
-			if firstName == currentName {
-				ast.SetError(p.Lin, p.Col, "nombre de parametro repetido")
-				return nil
-			}
-		}
-	}
-
-	// has a return type
-	if p.ReturnType != nil {
-
-		funcval := environment.FunctionSymbol{
-			Lin:        p.Lin,
-			Col:        p.Col,
-			ReturnType: getReturnType(p.ReturnType.(string)),
-			Args:       p.Args,
-			InsBlock:   p.insBlock,
-			StructType: "",
-			Mutating: p.Mutating,
-		}
-		return funcval
-
-	} else {
-
-		funcval := environment.FunctionSymbol{
-			Lin:        p.Lin,
-			Col:        p.Col,
-			ReturnType: environment.NULL,
-			Args:       p.Args,
-			InsBlock:   p.insBlock,
-			StructType: "",
-			Mutating: p.Mutating,
-		}
-		return funcval
-
-	}
-
-
+	return result
 }
-
