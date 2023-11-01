@@ -4,6 +4,7 @@ import (
 	"PY1/environment"
 	"PY1/generator"
 	"PY1/interfaces"
+	"fmt"
 	"reflect"
 )
 
@@ -21,6 +22,8 @@ func NewMatrixDec(lin int, col int, id string, tyype interface{}, def interfaces
 }
 
 func (p MatrixDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	var prueba = p.Def.Execute(ast, env, gen)
+	fmt.Println(prueba)
 	return environment.Value{}
 }
 
