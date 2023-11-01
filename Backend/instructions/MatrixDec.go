@@ -73,6 +73,55 @@ func (p MatrixDec) Execute(ast *environment.AST, env interface{}, gen *generator
 
 		return result
 
+	} else if _, isBreak := p.Def.(expressions.RepeatingVector); isBreak {
+
+		var arr = p.Def.(expressions.RepeatingVector).Execute2(ast, env, gen).Value
+		fmt.Println(arr)
+
+		prueba := flattenArray(arr)
+		fmt.Println(prueba)
+		var result, val environment.Value
+		size := len(prueba)
+
+		//generando array
+		gen.AddComment("----Generando matriz----")
+		newtmp1 := gen.NewTemp()
+		newtmp2 := gen.NewTemp()
+		gen.AddAssign(newtmp1, "H")
+		gen.AddExpression(newtmp2, newtmp1, "1", "+")
+		gen.AddSetHeap("(int)H", strconv.Itoa(size))
+		gen.AddExpression("H", "H", strconv.Itoa(size+1), "+")
+		//recorriendo lista de expressiones
+		for _, s := range prueba {
+			val = s.(interfaces.Expression).Execute(ast, env, gen)
+			gen.AddSetHeap("(int)"+newtmp2, val.Value)
+			gen.AddExpression(newtmp2, newtmp2, "1", "+")
+		}
+
+		dimentions := getArrayDimensions(arr)
+		if len(dimentions) == 1 {
+			dimentions = make([]int, 1)
+			dimentions[0] = 1
+		}
+		result = environment.Value{
+			Value:        newtmp1,
+			IsTemp:       true,
+			Type:         getTypeMatrix(val.Type),
+			TrueLabel:    nil,
+			FalseLabel:   nil,
+			OutLabel:     nil,
+			IntValue:     0,
+			FloatValue:   0,
+			BreakFlag:    false,
+			ContinueFlag: false,
+		}
+
+		newVar := env.(environment.Environment).SaveMatrix(p.Id, result.Type, size, arr.([]interface{}), dimentions)
+
+		gen.AddSetStack(strconv.Itoa(newVar.Position), result.Value)
+		gen.AddBr()
+
+		return result
 	}
 
 	var prueba = p.Def.Execute(ast, env, gen)
