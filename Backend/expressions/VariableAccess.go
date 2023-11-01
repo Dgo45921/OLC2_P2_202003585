@@ -38,6 +38,7 @@ func (p VariableAccess) Execute(ast *environment.AST, env interface{}, gen *gene
 		result.FalseLabel = append(result.FalseLabel, falseLabel)
 	} else {
 		result = environment.NewValue(newTemp2, true, retSym.Type)
+		result.Dimentions = retSym.Dimentions
 	}
 	return result
 }

@@ -2,10 +2,12 @@ package instructions
 
 import (
 	"PY1/environment"
+	"PY1/expressions"
 	"PY1/generator"
 	"PY1/interfaces"
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 type MatrixDec struct {
@@ -22,9 +24,77 @@ func NewMatrixDec(lin int, col int, id string, tyype interface{}, def interfaces
 }
 
 func (p MatrixDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
+	if env.(environment.Environment).VariableExists(p.Id) {
+		ast.SetError(p.Lin, p.Col, "Error, variable ya declarada!")
+		return environment.Value{}
+	}
+
+	if _, isBreak := p.Def.(expressions.ManualMatrixDef); isBreak {
+		newArray := subtractOneFromElements(p.Def.(expressions.ManualMatrixDef).Value, ast, env, gen)
+		response := newArray.([]interface{})[0]
+		prueba := flattenArray(response)
+		fmt.Println(prueba)
+		var result, val environment.Value
+		size := len(prueba)
+
+		//generando array
+		gen.AddComment("----Generando matriz----")
+		newtmp1 := gen.NewTemp()
+		newtmp2 := gen.NewTemp()
+		gen.AddAssign(newtmp1, "H")
+		gen.AddExpression(newtmp2, newtmp1, "1", "+")
+		gen.AddSetHeap("(int)H", strconv.Itoa(size))
+		gen.AddExpression("H", "H", strconv.Itoa(size+1), "+")
+		//recorriendo lista de expressiones
+		for _, s := range prueba {
+			val = s.(interfaces.Expression).Execute(ast, env, gen)
+			gen.AddSetHeap("(int)"+newtmp2, val.Value)
+			gen.AddExpression(newtmp2, newtmp2, "1", "+")
+		}
+
+		dimentions := getArrayDimensions(response)
+		result = environment.Value{
+			Value:        newtmp1,
+			IsTemp:       true,
+			Type:         getTypeMatrix(val.Type),
+			TrueLabel:    nil,
+			FalseLabel:   nil,
+			OutLabel:     nil,
+			IntValue:     0,
+			FloatValue:   0,
+			BreakFlag:    false,
+			ContinueFlag: false,
+		}
+
+		newVar := env.(environment.Environment).SaveMatrix(p.Id, result.Type, size, p.Def.(expressions.ManualMatrixDef).Value.([]interface{}), dimentions)
+
+		gen.AddSetStack(strconv.Itoa(newVar.Position), result.Value)
+		gen.AddBr()
+
+		return result
+
+	}
+
 	var prueba = p.Def.Execute(ast, env, gen)
 	fmt.Println(prueba)
 	return environment.Value{}
+}
+
+func getArrayDimensions(arr interface{}) []int {
+	dimensions := []int{}
+
+	var traverse func(interface{})
+	traverse = func(a interface{}) {
+		if reflect.TypeOf(a).Kind() == reflect.Slice {
+			dimensions = append(dimensions, reflect.ValueOf(a).Len())
+			if reflect.ValueOf(a).Len() > 0 {
+				traverse(reflect.ValueOf(a).Index(0).Interface())
+			}
+		}
+	}
+
+	traverse(arr)
+	return dimensions
 }
 
 func GetDepth(arr []interface{}) int {
@@ -102,4 +172,58 @@ func getCommonType(arr interface{}) reflect.Type {
 	default:
 		return reflect.TypeOf(arr)
 	}
+}
+
+func flattenArray(arr interface{}) []interface{} {
+	var result []interface{}
+
+	switch v := arr.(type) {
+	case []interface{}:
+		// If it's a slice of interfaces, flatten each sub-slice
+		for _, subArr := range v {
+			result = append(result, flattenArray(subArr)...)
+		}
+	default:
+		// If it's not a slice of interfaces, assume it's an element, and add it to the result
+		result = append(result, v)
+	}
+
+	return result
+}
+
+func subtractOneFromElements(arr interface{}, ast *environment.AST, env interface{}, gen *generator.Generator) interface{} {
+	switch arr.(type) {
+	case []interface{}:
+		result := make([]interface{}, len(arr.([]interface{})))
+		for i, item := range arr.([]interface{}) {
+			result[i] = subtractOneFromElements(item, ast, env, gen)
+		}
+		return result
+	case interfaces.Expression:
+		return arr.(interfaces.Expression)
+	case []interfaces.Expression:
+		result := make([]interface{}, len(arr.([]interface{})))
+		for i, item := range arr.([]interface{}) {
+			result[i] = item.(interfaces.Expression)
+		}
+		return result
+	default:
+		return arr
+	}
+}
+
+func getTypeMatrix(val environment.TipoExpresion) environment.TipoExpresion {
+	if val == environment.INTEGER {
+		return environment.MATRIX_INT
+	} else if val == environment.FLOAT {
+		return environment.MATRIX_FLOAT
+	} else if val == environment.BOOLEAN {
+		return environment.MATRIX_BOOLEAN
+	} else if val == environment.CHAR {
+		return environment.MATRIX_CHAR
+	} else if val == environment.STRING {
+		return environment.MATRIX_STRING
+	}
+
+	return environment.VECTOR
 }

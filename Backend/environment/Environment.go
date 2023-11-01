@@ -68,6 +68,17 @@ func (env Environment) SaveVector(id string, tyype TipoExpresion, size int, arra
 	return env.SymbolTable[id]
 }
 
+func (env Environment) SaveMatrix(id string, tyype TipoExpresion, size int, arrayvalues []interface{}, dimentions []int) Symbol {
+	if variable, ok := env.SymbolTable[id]; ok {
+		fmt.Println("La variable "+id+" ya existe ", variable)
+		return env.SymbolTable[id]
+	}
+	env.SymbolTable[id] = Symbol{Lin: 0, Col: 0, Type: tyype, Position: env.Size["size"] + size, Const: false, ArrayValues: arrayvalues, Dimentions: dimentions}
+	env.Size["size"] = env.Size["size"] + size
+	return env.SymbolTable[id]
+}
+
+
 func (env Environment) AppendVector(id string, tyype TipoExpresion, size int, arrayvalues []interface{}) Symbol {
 	env.SymbolTable[id] = Symbol{Lin: 0, Col: 0, Type: tyype, Position: env.Size["size"] + size, Const: false, ArrayValues: arrayvalues}
 	env.Size["size"] = env.Size["size"] + size

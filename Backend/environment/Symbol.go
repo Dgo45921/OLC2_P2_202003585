@@ -10,6 +10,7 @@ type Symbol struct {
 	Scope      EnvType
 	Position   int
 	ArrayValues [] interface{}
+	Dimentions [] int
 }
 
 func (s Symbol) SetnewValue(value interface{}) {

@@ -11,6 +11,7 @@ type Value struct {
 	FloatValue   float64
 	BreakFlag    bool
 	ContinueFlag bool
+	Dimentions [] int
 }
 
 func NewValue(Val string, tmp bool, typ TipoExpresion) Value {
