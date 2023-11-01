@@ -19,6 +19,7 @@ func NewWhile(lin int, col int, condition interfaces.Expression, insBlock []inte
 
 func (p While) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	gen.AddComment("---WHILE---")
+	var newEnv = environment.NewEnvironment(env, environment.WHILE)
 	var condicion, result environment.Value
 	//etiqueta de retorno
 	RetLvl := gen.NewLabel()
@@ -34,7 +35,7 @@ func (p While) Execute(ast *environment.AST, env interface{}, gen *generator.Gen
 	}
 	//instrucciones while
 	for _, s := range p.insBlock {
-		result = s.(interfaces.Instruction).Execute(ast, env, gen)
+		result = s.(interfaces.Instruction).Execute(ast, newEnv, gen)
 		//comprobar si es brak
 		if result.BreakFlag {
 			gen.AddGoto(gen.BreakLabel)

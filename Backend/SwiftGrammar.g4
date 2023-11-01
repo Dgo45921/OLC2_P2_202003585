@@ -63,8 +63,8 @@ guardstatement returns [interfaces.Instruction newguard]
 instruction returns [interfaces.Instruction inst]
 : printstmt PTOCOMA?  { $inst = $printstmt.prnt}
 | structfuncall   {$inst = $structfuncall.newstructfunccall}
-| decmatrix PTOCOMA? {$inst = $decmatrix.newmatrix}
 | vecdec PTOCOMA? {$inst = $vecdec.newvecdec}
+| decmatrix PTOCOMA? {$inst = $decmatrix.newmatrix}
 | vardec PTOCOMA?  { $inst = $vardec.newdec}
 | constdec PTOCOMA? {$inst = $constdec.newconst}
 | appendvec PTOCOMA? {$inst = $appendvec.newappendvec}

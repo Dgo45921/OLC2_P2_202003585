@@ -39,7 +39,7 @@ func Parse(w http.ResponseWriter, r *http.Request) {
 	lexerErrors = &CustomLexicalErrorListener{}
 	parserErrors = &CustomSyntaxErrorListener{}
 	Ast = environment.AST{}
-	Ast.Symbols = make(map[string]environment.Symbol)
+	Ast.Symbols = make(map[string]environment.Value)
 	Ast.FuncSymbol = make(map[string]environment.FunctionSymbol)
 	// newCode is responsible to save the given input
 	var newCode models.SourceCode

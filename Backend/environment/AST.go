@@ -15,7 +15,7 @@ type AST struct {
 	Instructions []interface{}
 	Print        string
 	Errors       []CustomSemanticError
-	Symbols      map[string]Symbol
+	Symbols      map[string]Value
 	FuncSymbol   map[string]FunctionSymbol
 }
 
@@ -47,7 +47,7 @@ func (a *AST) SetError(line int, col int, des string) {
 	a.Errors = append(a.Errors, err)
 }
 
-func (a *AST) SaveSymbol(id string, symbol Symbol) {
+func (a *AST) SaveSymbol(id string, symbol Value) {
 	a.Symbols[id] = symbol
 }
 

@@ -30,6 +30,12 @@ func (p VarDec) Execute(ast *environment.AST, env interface{}, gen *generator.Ge
 	result = p.Expression.(interfaces.Expression).Execute(ast, env, gen)
 	gen.AddComment("Agregando una declaracion")
 	newVar = env.(environment.Environment).SaveVariable(p.Id, result.Type)
+	extra := result
+	extra.Id = p.Id
+	extra.Scope = env.(environment.Environment).Scope
+	extra.Lin = p.Lin
+	extra.Col = p.Col
+	ast.SaveSymbol(p.Id, extra)
 
 	if result.Type == environment.BOOLEAN {
 		//si no es temp (boolean)

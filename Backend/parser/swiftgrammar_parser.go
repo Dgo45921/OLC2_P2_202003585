@@ -236,9 +236,9 @@ func swiftgrammarParserInit() {
 		4, -1, 0, 171, 9, 1, 0, 0, 0, 172, 174, 3, 68, 34, 0, 173, 175, 5, 62,
 		0, 0, 174, 173, 1, 0, 0, 0, 174, 175, 1, 0, 0, 0, 175, 176, 1, 0, 0, 0,
 		176, 177, 6, 5, -1, 0, 177, 299, 1, 0, 0, 0, 178, 179, 3, 12, 6, 0, 179,
-		180, 6, 5, -1, 0, 180, 299, 1, 0, 0, 0, 181, 183, 3, 116, 58, 0, 182, 184,
+		180, 6, 5, -1, 0, 180, 299, 1, 0, 0, 0, 181, 183, 3, 46, 23, 0, 182, 184,
 		5, 62, 0, 0, 183, 182, 1, 0, 0, 0, 183, 184, 1, 0, 0, 0, 184, 185, 1, 0,
-		0, 0, 185, 186, 6, 5, -1, 0, 186, 299, 1, 0, 0, 0, 187, 189, 3, 46, 23,
+		0, 0, 185, 186, 6, 5, -1, 0, 186, 299, 1, 0, 0, 0, 187, 189, 3, 116, 58,
 		0, 188, 190, 5, 62, 0, 0, 189, 188, 1, 0, 0, 0, 189, 190, 1, 0, 0, 0, 190,
 		191, 1, 0, 0, 0, 191, 192, 6, 5, -1, 0, 192, 299, 1, 0, 0, 0, 193, 195,
 		3, 72, 36, 0, 194, 196, 5, 62, 0, 0, 195, 194, 1, 0, 0, 0, 195, 196, 1,
@@ -1737,11 +1737,11 @@ type IInstructionContext interface {
 	// Get_structfuncall returns the _structfuncall rule contexts.
 	Get_structfuncall() IStructfuncallContext
 
-	// Get_decmatrix returns the _decmatrix rule contexts.
-	Get_decmatrix() IDecmatrixContext
-
 	// Get_vecdec returns the _vecdec rule contexts.
 	Get_vecdec() IVecdecContext
+
+	// Get_decmatrix returns the _decmatrix rule contexts.
+	Get_decmatrix() IDecmatrixContext
 
 	// Get_vardec returns the _vardec rule contexts.
 	Get_vardec() IVardecContext
@@ -1812,11 +1812,11 @@ type IInstructionContext interface {
 	// Set_structfuncall sets the _structfuncall rule contexts.
 	Set_structfuncall(IStructfuncallContext)
 
-	// Set_decmatrix sets the _decmatrix rule contexts.
-	Set_decmatrix(IDecmatrixContext)
-
 	// Set_vecdec sets the _vecdec rule contexts.
 	Set_vecdec(IVecdecContext)
+
+	// Set_decmatrix sets the _decmatrix rule contexts.
+	Set_decmatrix(IDecmatrixContext)
 
 	// Set_vardec sets the _vardec rule contexts.
 	Set_vardec(IVardecContext)
@@ -1891,8 +1891,8 @@ type IInstructionContext interface {
 	Printstmt() IPrintstmtContext
 	PTOCOMA() antlr.TerminalNode
 	Structfuncall() IStructfuncallContext
-	Decmatrix() IDecmatrixContext
 	Vecdec() IVecdecContext
+	Decmatrix() IDecmatrixContext
 	Vardec() IVardecContext
 	Constdec() IConstdecContext
 	Appendvec() IAppendvecContext
@@ -1925,8 +1925,8 @@ type InstructionContext struct {
 	inst                interfaces.Instruction
 	_printstmt          IPrintstmtContext
 	_structfuncall      IStructfuncallContext
-	_decmatrix          IDecmatrixContext
 	_vecdec             IVecdecContext
+	_decmatrix          IDecmatrixContext
 	_vardec             IVardecContext
 	_constdec           IConstdecContext
 	_appendvec          IAppendvecContext
@@ -1981,9 +1981,9 @@ func (s *InstructionContext) Get_printstmt() IPrintstmtContext { return s._print
 
 func (s *InstructionContext) Get_structfuncall() IStructfuncallContext { return s._structfuncall }
 
-func (s *InstructionContext) Get_decmatrix() IDecmatrixContext { return s._decmatrix }
-
 func (s *InstructionContext) Get_vecdec() IVecdecContext { return s._vecdec }
+
+func (s *InstructionContext) Get_decmatrix() IDecmatrixContext { return s._decmatrix }
 
 func (s *InstructionContext) Get_vardec() IVardecContext { return s._vardec }
 
@@ -2037,9 +2037,9 @@ func (s *InstructionContext) Set_printstmt(v IPrintstmtContext) { s._printstmt =
 
 func (s *InstructionContext) Set_structfuncall(v IStructfuncallContext) { s._structfuncall = v }
 
-func (s *InstructionContext) Set_decmatrix(v IDecmatrixContext) { s._decmatrix = v }
-
 func (s *InstructionContext) Set_vecdec(v IVecdecContext) { s._vecdec = v }
+
+func (s *InstructionContext) Set_decmatrix(v IDecmatrixContext) { s._decmatrix = v }
 
 func (s *InstructionContext) Set_vardec(v IVardecContext) { s._vardec = v }
 
@@ -2129,22 +2129,6 @@ func (s *InstructionContext) Structfuncall() IStructfuncallContext {
 	return t.(IStructfuncallContext)
 }
 
-func (s *InstructionContext) Decmatrix() IDecmatrixContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IDecmatrixContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IDecmatrixContext)
-}
-
 func (s *InstructionContext) Vecdec() IVecdecContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
@@ -2159,6 +2143,22 @@ func (s *InstructionContext) Vecdec() IVecdecContext {
 	}
 
 	return t.(IVecdecContext)
+}
+
+func (s *InstructionContext) Decmatrix() IDecmatrixContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IDecmatrixContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IDecmatrixContext)
 }
 
 func (s *InstructionContext) Vardec() IVardecContext {
@@ -2574,9 +2574,9 @@ func (p *SwiftGrammarParser) Instruction() (localctx IInstructionContext) {
 		{
 			p.SetState(181)
 
-			var _x = p.Decmatrix()
+			var _x = p.Vecdec()
 
-			localctx.(*InstructionContext)._decmatrix = _x
+			localctx.(*InstructionContext)._vecdec = _x
 		}
 		p.SetState(183)
 		p.GetErrorHandler().Sync(p)
@@ -2596,16 +2596,16 @@ func (p *SwiftGrammarParser) Instruction() (localctx IInstructionContext) {
 			}
 
 		}
-		localctx.(*InstructionContext).inst = localctx.(*InstructionContext).Get_decmatrix().GetNewmatrix()
+		localctx.(*InstructionContext).inst = localctx.(*InstructionContext).Get_vecdec().GetNewvecdec()
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
 			p.SetState(187)
 
-			var _x = p.Vecdec()
+			var _x = p.Decmatrix()
 
-			localctx.(*InstructionContext)._vecdec = _x
+			localctx.(*InstructionContext)._decmatrix = _x
 		}
 		p.SetState(189)
 		p.GetErrorHandler().Sync(p)
@@ -2625,7 +2625,7 @@ func (p *SwiftGrammarParser) Instruction() (localctx IInstructionContext) {
 			}
 
 		}
-		localctx.(*InstructionContext).inst = localctx.(*InstructionContext).Get_vecdec().GetNewvecdec()
+		localctx.(*InstructionContext).inst = localctx.(*InstructionContext).Get_decmatrix().GetNewmatrix()
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)

@@ -71,6 +71,14 @@ func (p MatrixDec) Execute(ast *environment.AST, env interface{}, gen *generator
 		gen.AddSetStack(strconv.Itoa(newVar.Position), result.Value)
 		gen.AddBr()
 
+		extra := result
+		extra.Id = p.Id
+		extra.Scope = env.(environment.Environment).Scope
+		extra.Lin = p.Lin
+		extra.Col = p.Col
+
+		ast.SaveSymbol(p.Id, extra)
+
 		return result
 
 	} else if _, isBreak := p.Def.(expressions.RepeatingVector); isBreak {
@@ -120,6 +128,14 @@ func (p MatrixDec) Execute(ast *environment.AST, env interface{}, gen *generator
 
 		gen.AddSetStack(strconv.Itoa(newVar.Position), result.Value)
 		gen.AddBr()
+
+		extra := result
+		extra.Id = p.Id
+		extra.Scope = env.(environment.Environment).Scope
+		extra.Lin = p.Lin
+		extra.Col = p.Col
+
+		ast.SaveSymbol(p.Id, extra)
 
 		return result
 	}
