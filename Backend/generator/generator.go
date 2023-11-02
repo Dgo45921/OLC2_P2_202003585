@@ -16,9 +16,11 @@ type Generator struct {
 	ConcatStringFlag bool
 	BreakLabel       string
 	ContinueLabel    string
+	ReturnLabel      string
 	MainCode         bool
 	Flag             bool
 	Auxlvl           string
+	LastReturnValue  interface{}
 }
 
 func NewGenerator() Generator {
@@ -193,7 +195,6 @@ func (g *Generator) AddEnd() {
 		g.FuncCode = append(g.FuncCode, "}\n\n")
 	}
 }
-
 
 func (g *Generator) SetMainFlag(newVal bool) {
 	g.MainCode = newVal

@@ -24,14 +24,16 @@ func NewFuncDec(lin int, col int, id string, args []environment.FuncParam, ret i
 
 func (p FuncDec) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	var result environment.Value
+	gen.ReturnLabel = gen.NewLabel()
 	gen.SetMainFlag(false)
-	gen.AddComment("******** Funcion " + p.Id + " ********")
+	gen.AddComment("======== FUNC " + p.Id + " ========")
 	gen.AddTittle(p.Id)
 	//entorno
 	var envFunc environment.Environment
 	envFunc = environment.NewEnvironment(env.(environment.Environment), environment.FUNC)
 	envFunc.Size["size"] = envFunc.Size["size"] + 1
 	//variables
+	gen.AddComment("saving arguments")
 	for _, s := range p.Args {
 		res := prueba(s.SID, s.Type)
 		envFunc.SaveVariable(res.Value, res.Type)
@@ -56,6 +58,7 @@ func (p FuncDec) Execute(ast *environment.AST, env interface{}, gen *generator.G
 			fmt.Println("Error en bloque")
 		}
 	}
+	gen.AddLabel(gen.ReturnLabel)
 	gen.AddEnd()
 	gen.SetMainFlag(true)
 

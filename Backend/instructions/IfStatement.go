@@ -43,6 +43,9 @@ func (p If) Execute(ast *environment.AST, env interface{}, gen *generator.Genera
 		} else if result.ContinueFlag {
 			gen.AddGoto(gen.ContinueLabel)
 			result.ContinueFlag = false
+		} else if result.ReturnFlag {
+			gen.AddGoto(gen.ReturnLabel)
+			result.ReturnFlag = false
 		}
 		//out lbls
 
@@ -80,6 +83,9 @@ func (p If) Execute(ast *environment.AST, env interface{}, gen *generator.Genera
 					if result.ContinueFlag {
 						gen.AddGoto(gen.ContinueLabel)
 						result.ContinueFlag = false
+					} else if result.ReturnFlag {
+						gen.AddGoto(gen.ReturnLabel)
+						result.ReturnFlag = false
 					}
 					//out lbls
 					for _, lvl := range result.OutLabel {
@@ -102,6 +108,9 @@ func (p If) Execute(ast *environment.AST, env interface{}, gen *generator.Genera
 					if result.ContinueFlag {
 						gen.AddGoto(gen.ContinueLabel)
 						result.ContinueFlag = false
+					} else if result.ReturnFlag {
+						gen.AddGoto(gen.ReturnLabel)
+						result.ReturnFlag = false
 					}
 					//out lbls
 					for _, lvl := range result.OutLabel {
@@ -127,6 +136,9 @@ func (p If) Execute(ast *environment.AST, env interface{}, gen *generator.Genera
 				if result.ContinueFlag {
 					gen.AddGoto(gen.ContinueLabel)
 					result.ContinueFlag = false
+				} else if result.ReturnFlag {
+					gen.AddGoto(gen.ReturnLabel)
+					result.ReturnFlag = false
 				}
 				//out lbls
 				for _, lvl := range result.OutLabel {

@@ -11,6 +11,7 @@ type Value struct {
 	FloatValue   float64
 	BreakFlag    bool
 	ContinueFlag bool
+	ReturnFlag  bool
 	Dimentions [] int
 	Const 	bool
 	Scope EnvType

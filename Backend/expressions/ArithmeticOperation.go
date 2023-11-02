@@ -58,6 +58,7 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 				result = environment.NewValue(newTemp, true, dominante)
 				result.IntValue = op1.IntValue + op2.IntValue
 				result.FloatValue = op1.FloatValue + op2.FloatValue
+
 				return result
 			} else if dominante == environment.STRING {
 				//llamar a generar concatstring
@@ -255,7 +256,7 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 			gen.AddLabel(L4)
 			gen.AddAssign(t4, "heap[(int)"+t2+"]")
 			gen.AddIf(t4, "-1", "==", L1)
-			gen.AddComment("viendo si solo numeros")
+			gen.AddComment("checking string is only nums")
 			gen.AddIf(t4, "48", "<", L5)
 			gen.AddIf(t4, "57", ">", L5)
 
@@ -319,7 +320,7 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 			gen.AddGoto(LRec)
 
 			gen.AddLabel(L5)
-			gen.AddComment("No se puede convertir la cadena a INT")
+			gen.AddComment("cannot cast")
 			gen.AddPrintf("c", "78")
 			gen.AddPrintf("c", "111")
 			gen.AddPrintf("c", "32")
