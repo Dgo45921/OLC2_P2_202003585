@@ -41,7 +41,7 @@ func (p Return) Execute(ast *environment.AST, env interface{}, gen *generator.Ge
 		}
 		gen.LastReturnValue = response
 		gen.AddComment("val a retornar")
-		gen.AddExpression("stack[(int)P]", "0", response.Value, "+")
+		gen.AddExpression("stack[(int)P]", "", response.Value, "")
 		gen.AddGoto(gen.ReturnLabel)
 		gen.LastReturnValue = response
 		response.ReturnFlag = true

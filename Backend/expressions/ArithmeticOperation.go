@@ -224,8 +224,8 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 				gen.AddExpression(newTemp, "0", "", "")
 				gen.AddGoto(lvl2)
 				gen.AddLabel(lvl1)
-				//gen.AddExpression(newTemp, op1.Value, op2.Value, "%")
-				gen.AddExpression(newTemp, "fmod("+op1.Value, op2.Value+")", ",")
+				gen.AddExpression(newTemp, "(int)"+op1.Value, op2.Value, "%")
+				//gen.AddExpression(newTemp, "fmod("+op1.Value, op2.Value+")", ",")
 				gen.AddLabel(lvl2)
 				result = environment.NewValue(newTemp, true, dominante)
 				return result

@@ -1,4 +1,7 @@
-
+print("--------------------------");
+print("---FUNCIONES RECURSIVAS---");
+print("-----------7 pts----------");
+print("--------------------------");
 
 func fibonacci(_ n: Int) -> Int {
     if n <= 0 {
@@ -10,10 +13,23 @@ func fibonacci(_ n: Int) -> Int {
     }
 }
 
+func Hanoi(_ discos: Int, _ origen: Int, _ auxiliar: Int, _ destino: Int) {
+    if discos == 1 {
+        print("Mover disco de", origen, "a", destino)
+    } else {
+        Hanoi(discos - 1, origen, destino, auxiliar)
+        print("Mover disco de", origen, "a", destino)
+        Hanoi(discos - 1, auxiliar, origen, destino)
+    }
+}
 
-print(fibonacci(4))
-
-
+print("")
+print("Fibonacci de 4: ", fibonacci(4))
+print("Fibonacci de 8: ", fibonacci(8))
+print("Fibonacci de 10: ", fibonacci(10))
+print("")
+print("Hanoi")
+Hanoi(3, 1, 2, 3)
 
 
 /*
