@@ -13,6 +13,7 @@ type Environment struct {
 	Scope          EnvType
 	Size           map[string]int
 	Id             string
+	StructSymbolTable map[string]Symbol
 }
 
 func NewEnvironment(prev interface{}, scope EnvType) Environment {
@@ -23,6 +24,7 @@ func NewEnvironment(prev interface{}, scope EnvType) Environment {
 		FunctionTable:  make(map[string]FunctionSymbol),
 		Size:           make(map[string]int),
 		Scope:          scope,
+		StructSymbolTable: make(map[string]Symbol),
 	}
 }
 
@@ -54,6 +56,21 @@ func (env Environment) SaveVariable(id string, tyype TipoExpresion) Symbol {
 		return env.SymbolTable[id]
 	}
 	env.SymbolTable[id] = Symbol{Lin: 0, Col: 0, Type: tyype, Position: env.Size["size"], Const: false}
+	env.Size["size"] = env.Size["size"] + 1
+	return env.SymbolTable[id]
+}
+
+func (env Environment) SaveVariableStructArg(id string, tyype TipoExpresion) Symbol {
+	env.Size["size"] = env.Size["size"] + 1
+	return Symbol{Lin: 0, Col: 0, Type: tyype, Position: env.Size["size"], Const: false}
+}
+
+func (env Environment) SaveVariableStruct(id string, tyype Symbol) Symbol {
+	if variable, ok := env.SymbolTable[id]; ok {
+		fmt.Println("La variable "+id+" ya existe ", variable)
+		return env.SymbolTable[id]
+	}
+	env.SymbolTable[id] = tyype
 	env.Size["size"] = env.Size["size"] + 1
 	return env.SymbolTable[id]
 }

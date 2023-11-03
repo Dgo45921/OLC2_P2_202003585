@@ -20,18 +20,55 @@ func NewStructAccess(lin int, col int, id string, accesses []string) StructAcces
 
 func (p StructAccess) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
 	var result environment.Value
+	if env.(environment.Environment).VariableExists(p.ID) {
+		foundVar := env.(environment.Environment).FindVar(p.ID)
+		if foundVar.Type == environment.STRUCT_IMP {
+			foundSymbol := GetValueByArray(p.Accesses, foundVar)
+			if foundSymbol != nil {
+				if _, isBreak := foundSymbol.(environment.Value); isBreak {
+					return foundSymbol.(environment.Value)
+				}
+
+			}
+			return result
+
+		} else {
+			return result
+
+		}
+	}
 	return result
 }
 
 func GetValueByArray(arr []string, symbol environment.Symbol) interface{} {
 	var currentSymbol = symbol
+	var currentValue = environment.Value{
+		Value:        "",
+		IsTemp:       false,
+		Type:         0,
+		TrueLabel:    nil,
+		FalseLabel:   nil,
+		OutLabel:     nil,
+		IntValue:     0,
+		FloatValue:   0,
+		BreakFlag:    false,
+		ContinueFlag: false,
+		ReturnFlag:   false,
+		Dimentions:   nil,
+		Const:        false,
+		Scope:        0,
+		Lin:          0,
+		Col:          0,
+		Id:           "",
+		StructValues: nil,
+	}
 
 	for _, key := range arr {
 		found := false
 		if kvArr, ok := currentSymbol.Value.([]environment.KeyValue); ok {
 			for _, kv := range kvArr {
 				if kv.Key == key {
-					currentSymbol = kv.Value.(environment.Symbol)
+					currentValue = kv.Value.(environment.Value)
 					found = true
 					break
 				}
@@ -43,7 +80,7 @@ func GetValueByArray(arr []string, symbol environment.Symbol) interface{} {
 		}
 	}
 
-	return currentSymbol
+	return currentValue
 }
 
 func searchNestedValue(data environment.KeyValue, keys []string) (interface{}, error) {

@@ -11,6 +11,7 @@ type Symbol struct {
 	Position   int
 	ArrayValues [] interface{}
 	Dimentions [] int
+	StructEnv Environment
 }
 
 func (s Symbol) SetnewValue(value interface{}) {

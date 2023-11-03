@@ -13,4 +13,5 @@ const (
 	ElSE
 	ELSEIF
 	GUARD
+	STRUCT
 )

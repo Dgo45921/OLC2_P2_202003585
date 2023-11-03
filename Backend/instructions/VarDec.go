@@ -28,6 +28,11 @@ func (p VarDec) Execute(ast *environment.AST, env interface{}, gen *generator.Ge
 	var result environment.Value
 	var newVar environment.Symbol
 	result = p.Expression.(interfaces.Expression).Execute(ast, env, gen)
+	if result.Type == environment.STRUCT_IMP {
+		env.(environment.Environment).SaveVariableStruct(p.Id, environment.Symbol{Lin: p.Lin, Col: p.Col, Type: environment.STRUCT_IMP, Value: result.StructValues, StructType: result.Id})
+		return result
+	}
+
 	gen.AddComment("Agregando una declaracion")
 	newVar = env.(environment.Environment).SaveVariable(p.Id, result.Type)
 	extra := result
@@ -61,4 +66,8 @@ func (p VarDec) Execute(ast *environment.AST, env interface{}, gen *generator.Ge
 	}
 
 	return result
+}
+
+func (p VarDec) GetVarDec(ast *environment.AST, env interface{}) interface{} {
+	return p
 }

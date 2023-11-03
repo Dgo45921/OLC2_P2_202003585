@@ -9,25 +9,25 @@ print("================DEFINICIÓN===================")
 print("=============================================")
 
 struct StructArr {
-    var datos: Float
+    var datos: Float?
 }
 
 struct CentroTuristico {
-    var nombre: String
+    var nombre: String?
 }
 
 struct Carro {
-    var placa: String
-    var color: String
-    var tipo: String
+    var placa: String?
+    var color: String?
+    var tipo: String?
 }
 
 struct Personaje {
-    var nombre: String
-    var edad: Int
-    var descripcion: String
-    var carro: Carro
-    var numeros: StructArr
+    var nombre: String?
+    var edad: Int?
+    var descripcion: String?
+    var carro: Carro?
+    // var numeros: StructArr?
 }
 
 print(" ")
@@ -35,13 +35,13 @@ print("=============================================")
 print("==============INSTANCIACIÓN==================")
 print("=============================================")
 
-let centro1 = CentroTuristico{nombre: "Volcan de pacaya"}
-let centro2 = CentroTuristico{nombre: "Rio dulce"}
-let centro3 = CentroTuristico{nombre: "Laguna Luchoa"}
-let centro4 = CentroTuristico{nombre: "Playa Blanca"}
-let centro5 = CentroTuristico{nombre: "Antigua Guatemala"}
-let centro6 = CentroTuristico{nombre: "Lago de Atitlan"}
-let newCarro = Carro{placa: "090PLO", color: "gris", tipo: "mecanico"}
+var centro1 = CentroTuristico{nombre: "Volcan de pacaya"}
+var centro2 = CentroTuristico{nombre: "Rio dulce"}
+var centro3 = CentroTuristico{nombre: "Laguna Luchoa"}
+var centro4 = CentroTuristico{nombre: "Playa Blanca"}
+var centro5 = CentroTuristico{nombre: "Antigua Guatemala"}
+var centro6 = CentroTuristico{nombre: "Lago de Atitlan"}
+var newCarro = Carro{placa: "090PLO", color: "gris", tipo: "mecanico"}
 var nums = StructArr{datos: 0.0}
 
 var p1 = Personaje{

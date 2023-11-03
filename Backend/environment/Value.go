@@ -18,6 +18,7 @@ type Value struct {
 	Lin int
 	Col int
 	Id string
+	StructValues []KeyValue
 }
 
 func NewValue(Val string, tmp bool, typ TipoExpresion) Value {
