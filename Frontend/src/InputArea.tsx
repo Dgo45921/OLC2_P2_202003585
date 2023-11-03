@@ -88,6 +88,30 @@ function InputArea() {
 
     }
 
+
+    const handleLogCodeOptmize = async () => {
+
+        updateOutputText('')
+
+        try {
+            const response = await fetch("http://localhost:5000/interpreter/get_optimized", {
+                method: "GET",
+
+            });
+
+            const result = await response.json();
+            updateOutputText(result.console)
+        } catch (error) {
+            console.error("Error:", error);
+        }
+
+
+
+
+
+
+    }
+
     const handleNewFile = () => {
         const newTabs = [...tabs];
         newTabs[currentTabIndex].code = "";
@@ -158,9 +182,10 @@ function InputArea() {
                         }
                     }}
                 />
-                <Button onClick={handleGuardar}>Guardar</Button>
+                <Button onClick={handleGuardar} style={{ marginRight: 1470 }}>Guardar</Button>
 
-                <Button onClick={handleLogCode} className="analyze-btn">Ejecutar</Button>
+                <Button onClick={handleLogCodeOptmize} className="analyze-btn" variant={"success"}>OPTMIZE</Button>
+                <Button onClick={handleLogCode} className="analyze-btn">GET_TAC</Button>
             </div>
 
             <h4 style={{color:"white", marginTop:"50px"}}>Salida:</h4>

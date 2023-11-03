@@ -15,9 +15,12 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
+	"strings"
 )
 
 var lastGivencode = ""
+var lastReturnedCode []string
 var lexerErrors = &CustomLexicalErrorListener{}
 var parserErrors = &CustomSyntaxErrorListener{}
 
@@ -35,6 +38,62 @@ func IndexRoute(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// ========== optmize functions =============================
+func validateLineRule1(line string) bool {
+	patron := `^t\d+\s*=\s*(t\d+|\d+)\s*[+\-\*/]\s*(t\d+|\d+)$`
+	regex := regexp.MustCompile(patron)
+	flag := regex.MatchString(line)
+	return flag
+}
+
+func getTokensRule1(line string) (string, string, string, string) {
+	tempArr := strings.Split(line, " ")
+	return tempArr[0], tempArr[2], tempArr[3], tempArr[4]
+}
+
+func cleanLineRule1(line string) string {
+	noJump := strings.ReplaceAll(line, "\n", "")
+	noTab := strings.ReplaceAll(noJump, "\t", "")
+	newLine := strings.ReplaceAll(noTab, ";", "")
+	return newLine
+}
+
+func Rule1(arr []string) []string { //Eliminación de instrucciones red. de carga y almacenamiento
+	//se recorre el arreglo
+	for i := 0; i < len(arr); i++ {
+		//leyendo entrada
+		line := cleanLineRule1(arr[i])
+		//comprobando
+		if validateLineRule1(line) {
+			//obteniendo tokens
+			target1, left1, op1, right1 := getTokensRule1(line)
+			//continuando recorrido
+			for j := i + 1; j < len(arr); j++ {
+				//leyendo nueva entrada
+				line2 := cleanLineRule1(arr[j])
+				if validateLineRule1(line2) {
+					target2, left2, op2, right2 := getTokensRule1(line2)
+					//validación 1
+					if target2 == target1 || target2 == left1 || target2 == right1 {
+						break
+					}
+					//validación 2
+					if left1+op1+right1 == left2+op2+right2 || left1+op1+right1 == right2+op2+left2 {
+						//sustituir
+						arr[j] = "\t" + target2 + " = " + target1 + ";\n"
+						continue
+					}
+				}
+
+			}
+		}
+	}
+	return arr
+}
+
+// ==========================================================
+
 func Parse(w http.ResponseWriter, r *http.Request) {
 	lexerErrors = &CustomLexicalErrorListener{}
 	parserErrors = &CustomSyntaxErrorListener{}
@@ -56,6 +115,7 @@ func Parse(w http.ResponseWriter, r *http.Request) {
 	// printing the input
 	fmt.Println(newCode.Code)
 	lastGivencode = newCode.Code
+	lastReturnedCode = []string{}
 
 	err = writeSourceCodeFile("source.txt", lastGivencode)
 	if err != nil {
@@ -98,11 +158,28 @@ func Parse(w http.ResponseWriter, r *http.Request) {
 	if len(Ast.Errors) == 0 {
 		for _, item := range Generator.GetFinalCode() {
 			ConsoleOut += item.(string)
+			lastReturnedCode = append(lastReturnedCode, item.(string))
 		}
 	} else {
 		ConsoleOut = "Hubieron errores, por favor revise el reporte de errores!\n"
 	}
 	fmt.Println(ConsoleOut)
+
+	consoleResponse.Console = ConsoleOut
+	json.NewEncoder(w).Encode(consoleResponse)
+}
+
+func GetOptimized(w http.ResponseWriter, r *http.Request) {
+
+	var consoleResponse models.ConsoleResponse
+
+	codeR1 := Rule1(lastReturnedCode)
+
+	//salida
+	var ConsoleOut = ""
+	for _, item := range codeR1 {
+		ConsoleOut += item
+	}
 
 	consoleResponse.Console = ConsoleOut
 	json.NewEncoder(w).Encode(consoleResponse)

@@ -1,53 +1,64 @@
-print("--------------------------");
-print("---FUNCIONES RECURSIVAS---");
-print("-----------7 pts----------");
-print("--------------------------");
+print("----------------------")
+print("----ARCHIVO BASICO----")
+print("--------16 pts--------")
+print("----------------------")
 
-func fibonacci(_ n: Int) -> Int {
-    if n <= 0 {
-        return 0
-    } else if n == 1 {
-        return 1
-    } else {
-        return fibonacci(n - 1) + fibonacci(n - 2)
-    }
-}
+var bol = false
+var bol2 = !bol
+var cad1 = "imprimir"
+var cad2 = "cadena valida"
 
-func Hanoi(_ discos: Int, _ origen: Int, _ auxiliar: Int, _ destino: Int) {
-    if discos == 1 {
-        print("Mover disco de", origen, "a", destino)
-    } else {
-        Hanoi(discos - 1, origen, destino, auxiliar)
-        print("Mover disco de", origen, "a", destino)
-        Hanoi(discos - 1, auxiliar, origen, destino)
-    }
-}
+var val1 = 7 - (5 + 10 * (2 + 4 * (5 + 2 * 3)) - 8 * 3 * 3) + 50 * (6 * 2)
+var val2 = (2 * 2 * 2 * 2) - 9 - (8 - 6 + (3 * 3 - 6 * 5 - 7 - (9 + 7 * 7 * 7) + 10) - 5) + 8 - (6 - 5 * (2 * 3))
+var val3 = val1 + ((2 + val2 * 3) + 1 - ((2 * 2 * 2) - 2) * 2) - 2
 
-print("")
-print("Fibonacci de 4: ", fibonacci(4))
-print("Fibonacci de 8: ", fibonacci(8))
-print("Fibonacci de 10: ", fibonacci(10))
-print("")
-print("Hanoi")
-Hanoi(3, 1, 2, 3)
+print("El valor de val1 es:", val1)
+print("El valor de val2 es:", val2)
+print("El valor de val3 es:", val3)
+print("El resultado de la operación es:", val3)
+print("El valor de bol es:", bol)
+print("El valor de cad1 es:", cad1)
+print("El valor de cad2 es:", cad2)
+print("El valor de bol2:", bol2)
 
+var a = 100
+var b = 100
+var c = 7
+var f = true
+var j: Float = 10.0
+var k: Float = 10.0
+
+print((a > b || b < c))
+
+print((a == b && j == k) || 14 != c)
+
+var val = 5
+var resp = 5
+var valorVerdadero = 100
+
+print((valorVerdadero == (50 + 50 + (val - val))) && (!(!true)))
+
+var x1 = 15
+print(x1 % 2 == 0)
+
+print("valor nulo: ", nil)
 
 /*
---------------------------
----FUNCIONES RECURSIVAS---
------------7 pts----------
---------------------------
-
-Fibonacci de 4:  3
-Fibonacci de 8:  21
-Fibonacci de 10:  55
-
-Hanoi
-Mover disco de 1 a 3
-Mover disco de 1 a 2
-Mover disco de 3 a 2
-Mover disco de 1 a 3
-Mover disco de 2 a 1
-Mover disco de 2 a 3
-Mover disco de 1 a 3
+----------------------
+----ARCHIVO BASICO----
+--------16 pts--------
+----------------------
+El valor de val1 es: 214
+El valor de val2 es: 412
+El valor de val3 es: 1439
+El resultado de la operación es: 1439
+El valor de bol es: false
+El valor de cad1 es: imprimir
+El valor de cad2 es: cadena valida
+El valor de bol2: true
+false
+true
+true
+false
+NULL
 */

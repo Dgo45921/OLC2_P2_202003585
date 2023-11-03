@@ -27,6 +27,7 @@ func main() {
 
 func parserRoutes(router *mux.Router) {
 	router.HandleFunc("/interpreter/parse", controllers.Parse).Methods("POST")
+	router.HandleFunc("/interpreter/get_optimized", controllers.GetOptimized).Methods("GET")
 	router.HandleFunc("/interpreter/getCST", controllers.GetCST).Methods("GET")
 	router.HandleFunc("/interpreter/getErrors", controllers.GetErrors).Methods("GET")
 	router.HandleFunc("/interpreter/getST", controllers.GetSymbolTable).Methods("GET")
