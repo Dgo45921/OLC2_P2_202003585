@@ -69,6 +69,10 @@ func GetValueByArray(arr []string, symbol environment.Symbol) interface{} {
 			for _, kv := range kvArr {
 				if kv.Key == key {
 					currentValue = kv.Value.(environment.Value)
+					if currentValue.Type == environment.STRUCT_IMP {
+						currentSymbol.Value = currentValue.StructValues
+					}
+
 					found = true
 					break
 				}

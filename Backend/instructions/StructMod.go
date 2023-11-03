@@ -5,7 +5,6 @@ import (
 	"PY1/generator"
 	"PY1/interfaces"
 	"errors"
-
 	"reflect"
 )
 
@@ -23,10 +22,26 @@ func NewStructMod(lin int, col int, id string, accesses []string, exp interfaces
 }
 
 func (p StructMod) Execute(ast *environment.AST, env interface{}, gen *generator.Generator) environment.Value {
-	return environment.Value{}
+	var result environment.Value
+	foundVar := env.(environment.Environment).FindVar(p.ID)
+	newvalue := p.Exp.Execute(ast, env, gen)
+	if foundVar.Type == environment.STRUCT_IMP {
+
+		err := UpdateValueByArray(p.Accesses, foundVar, newvalue, env)
+
+		if err != nil {
+			ast.SetError(p.Lin, p.Col, "no se pudo modificar el atributo")
+		}
+
+		return result
+
+	} else {
+		return result
+
+	}
 }
 
-func UpdateValueByArray(arr []string, symbol environment.Symbol, val environment.Symbol, env interface{}) error {
+func UpdateValueByArray(arr []string, symbol environment.Symbol, val environment.Value, env interface{}) error {
 	var currentSymbol = symbol
 
 	// Create a reflect.Value of the provided value
@@ -38,16 +53,11 @@ func UpdateValueByArray(arr []string, symbol environment.Symbol, val environment
 			for i, kv := range kvArr {
 				if kv.Key == key {
 					// Update kv.Value with the new value using reflection
-					if _, isBreak := kv.Value.(environment.Symbol); isBreak {
-						if !kv.Value.(environment.Symbol).Const && kv.Value.(environment.Symbol).Type == val.Type {
+					if _, isBreak := kv.Value.(environment.Value); isBreak {
+						if !kv.Value.(environment.Value).Const && kv.Value.(environment.Value).Type == val.Type {
 							if val.Type == environment.STRUCT_IMP {
-								foundVar := env.(environment.Environment).FindVar(val.StructType)
-								if foundVar.StructType == val.StructType {
-									reflect.ValueOf(&kvArr[i]).Elem().FieldByName("Value").Set(newVal)
-									found = true
-								} else {
-									return errors.New("Struct type mismatch")
-								}
+								reflect.ValueOf(&kvArr[i]).Elem().FieldByName("Value").Set(newVal)
+								found = true
 
 							} else {
 								reflect.ValueOf(&kvArr[i]).Elem().FieldByName("Value").Set(newVal)
@@ -67,4 +77,51 @@ func UpdateValueByArray(arr []string, symbol environment.Symbol, val environment
 	}
 
 	return nil
+}
+
+func GetValueByArray2(arr []string, symbol environment.Symbol) interface{} {
+	var currentSymbol = symbol
+	var currentValue = environment.Value{
+		Value:        "",
+		IsTemp:       false,
+		Type:         0,
+		TrueLabel:    nil,
+		FalseLabel:   nil,
+		OutLabel:     nil,
+		IntValue:     0,
+		FloatValue:   0,
+		BreakFlag:    false,
+		ContinueFlag: false,
+		ReturnFlag:   false,
+		Dimentions:   nil,
+		Const:        false,
+		Scope:        0,
+		Lin:          0,
+		Col:          0,
+		Id:           "",
+		StructValues: nil,
+	}
+
+	for _, key := range arr {
+		found := false
+		if kvArr, ok := currentSymbol.Value.([]environment.KeyValue); ok {
+			for _, kv := range kvArr {
+				if kv.Key == key {
+					currentValue = kv.Value.(environment.Value)
+					if currentValue.Type == environment.STRUCT_IMP {
+						currentSymbol.Value = currentValue.StructValues
+					}
+
+					found = true
+					break
+				}
+			}
+		}
+
+		if !found {
+			return nil
+		}
+	}
+
+	return currentValue
 }

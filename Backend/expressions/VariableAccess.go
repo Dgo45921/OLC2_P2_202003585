@@ -36,6 +36,10 @@ func (p VariableAccess) Execute(ast *environment.AST, env interface{}, gen *gene
 		result = environment.NewValue("", false, environment.BOOLEAN)
 		result.TrueLabel = append(result.TrueLabel, trueLabel)
 		result.FalseLabel = append(result.FalseLabel, falseLabel)
+	} else if retSym.Type == environment.STRUCT_IMP {
+		result.StructValues = retSym.Value.([]environment.KeyValue)
+		result.Type = environment.STRUCT_IMP
+		return result
 	} else {
 		result = environment.NewValue(newTemp2, true, retSym.Type)
 		result.Dimentions = retSym.Dimentions

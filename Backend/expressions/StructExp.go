@@ -135,6 +135,10 @@ func CreateVarDec(ast *environment.AST, env interface{}, gen *generator.Generato
 	var result environment.Value
 	var newVar environment.Symbol
 	result = exp.Execute(ast, env, gen)
+	if result.Type == environment.STRUCT_IMP {
+
+		return result
+	}
 	gen.AddComment("Agregando una declaracion")
 	newVar = env.(environment.Environment).SaveVariableStructArg(Id, result.Type)
 	extra := result
