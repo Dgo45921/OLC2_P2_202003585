@@ -125,6 +125,8 @@ func (o ArithmeticOperation) Execute(ast *environment.AST, env interface{}, gen 
 		}
 	case "-":
 		{
+
+			gen.AddComment("CALIFICACION 2")
 			op1 = o.OpIzq.Execute(ast, env, gen)
 			op2 = o.OpDer.Execute(ast, env, gen)
 			if op1.Type < 0 || int(op1.Type) >= len(tablaDominante) || op2.Type < 0 || int(op2.Type) >= len(tablaDominante) {
